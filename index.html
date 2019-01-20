@@ -4,22 +4,39 @@
         <link rel="stylesheet" type="text/css" href="interface.css" />
         <title>Idle game</title>
 </head>
-<body>
+<body onload="load();">
         <p>Welcome!</p>
         <br />
+        <h2>Power Stats:</h2>
         <p>Current power generation is: <span id="current_gen">0</span> kW/h</p>
-        <p>Current sale price is: $<span id="current_power_price">2</span> per kW/h</p>
+        <p>Current sale price is: $<span id="current_power_price">0</span> per kW/h</p>
         <p>Credits per hour: $<span id="current_per_hour">0</span></p>
-        <p>Current credits: $<span id="current_credits">100</span></p>
-        <br />
-        <button type="button" onclick="buyWorker(1)">Hire worker</button>
-        <p>Workers: <span id="workers">0</span></p>
-        <p>Cost per hour: $<span id="work_cost">0.1</span></p>
-        <br />
-        <button type="button" onclick="buyPedalMachine(1)">Buy Pedal Machine (tm)</button>
-        <p>Pedal Machines: <span id="p_machs">0</span></p>
-        <p>Cost: <span id="p_mach_cost">10</span></p>
-        <br />
+        <p>Current credits: $<span id="current_credits">0</span></p>
+        <br>
+        <h2>Avliable areas:</h2>
+        <button type="button" onclick="show_area('factory_floor')">Factory floor</button>
+        <button type="button" onclick="show_area('laboratory')">Laboratory</button>
+        <hr>
+        <div id = "factory_floor" style="display: Block;">
+                <br />
+                <button type="button" onclick="buyWorker(1)">Hire worker</button>
+                <p>Workers: <span id="workers">0</span></p>
+                <p>Cost per hour: $<span id="work_cost">0</span></p>
+                <br />
+                <button type="button" onclick="buyPedalMachine(1)">Buy Pedal Machine (tm)</button>
+                <p>Pedal Machines: <span id="p_mechs">0</span></p>
+                <p>kw/h: <span id="p_mech_eff">0</span></p>
+                <p>Cost: <span id="p_mach_cost">0</span></p>
+                <br />
+        </div>
+
+        <div id = "laboratory" style="display: None;">
+                <br />
+                <button type="button" onclick="upgradePedalMachine()">Prototype Pedal Machine Upgrade</button>
+                <p>Current kw/h: <span id="p_mech_eff2">0</span></p>
+                <p>Upgrade cost: $<span id="p_mech_prototype_cost">0</span></p>
+                <p>Upgrade chance: <span id="p_mech_upgrade_chance">0</span></p>                
+        </div>
         <p>End</p>
         <script type="text/javascript" src="main.js"></script>
 </body>
