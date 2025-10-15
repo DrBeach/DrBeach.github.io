@@ -16,3 +16,12 @@ This is a simple idle game where you manage a power generation facility. The goa
 *   `index.html`: This file contains the main structure of the game's interface, including all the buttons, text, and displays.
 *   `interface.css`: This file styles the visual presentation of the game, including colors, fonts, and layout.
 *   `main.js`: This file contains all the game's logic, such as calculating power generation, handling purchases, and updating the display.
+
+## Revision History
+
+### Version 0.1
+
+*   **Managers:** You can now hire managers in the "Management" section to automate the process of buying workers and pedal machines.
+*   **Power and Credit Graphs:** A new "Dashboard" section has been added, which displays graphs of your power generation and credit history over time.
+*   **Manager Efficiency Upgrade:** In the "Laboratory," you can now upgrade the efficiency of your managers, allowing them to purchase more workers and machines at a time.
+*   **Power Price Negotiation:** In the "Management" section, you can now negotiate the price of power, which will temporarily double the sale price. This ability has a cooldown period.
