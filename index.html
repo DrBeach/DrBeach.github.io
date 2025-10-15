@@ -19,6 +19,7 @@
         <button type="button" onclick="show_area('laboratory')">Laboratory</button>
         <button type="button" onclick="show_area('management')">Management</button>
         <button type="button" onclick="show_area('dashboard')">Dashboard</button>
+        <button type="button" onclick="show_area('admin')">Admin</button>
         <hr>
         <div id = "factory_floor" style="display: Block;">
                 <br />
@@ -57,9 +58,19 @@
 
         <div id = "dashboard" style="display: None;">
                 <br />
-                <canvas id="resourceChart"></canvas>
+                <canvas id="resourceChart" width="600" height="300"></canvas>
+        </div>
+
+        <div id = "admin" style="display: None;">
+                <br />
+                <button type="button" onclick="runSimulationTest()">Run Simulation Test</button>
+                <p>Result: <span id="sim_test_result"></span></p>
+                <br />
+                <button type="button" onclick="runUnitTests()">Run Unit Tests</button>
+                <p>Result: <span id="unit_test_result"></span></p>
         </div>
         <p>End</p>
         <script type="text/javascript" src="main.js"></script>
+        <script type="text/javascript" src="tests.js"></script>
 </body>
 </html>

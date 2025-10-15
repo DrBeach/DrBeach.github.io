@@ -21,7 +21,7 @@ var manager_efficiency_cost = 5000
 var negotiate_cooldown = 0
 var base_power_price = 2
 
-var areas = ["factory_floor", "laboratory", "management", "dashboard"]
+var areas = ["factory_floor", "laboratory", "management", "dashboard", "admin"]
 
 var creditHistory = []
 var powerHistory = []
@@ -199,3 +199,21 @@ window.setInterval(function(){
     updateChart()
     document.getElementById("current_credits").innerHTML = current_credits;
 }, 1000);
+
+function runSimulationTest(){
+    var initial_credits = current_credits;
+    var sim_interval = setInterval(function(){
+        buyWorker(1);
+        buyPedalMachine();
+        getCredits();
+    }, 10);
+
+    setTimeout(function(){
+        clearInterval(sim_interval);
+        if(current_credits > initial_credits){
+            document.getElementById("sim_test_result").innerHTML = "Passed";
+        } else {
+            document.getElementById("sim_test_result").innerHTML = "Failed";
+        }
+    }, 3000);
+}
