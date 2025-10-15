@@ -14,7 +14,18 @@ var p_mech_level = 1
 var p_mech_prototype_cost = 0
 var p_mech_upgrade_chance = 0.1
 
-var areas = ["factory_floor", "laboratory"]
+var managers = 0
+var manager_cost = 1000
+var manager_efficiency = 1
+var manager_efficiency_cost = 5000
+var negotiate_cooldown = 0
+var base_power_price = 2
+
+var areas = ["factory_floor", "laboratory", "management", "dashboard"]
+
+var creditHistory = []
+var powerHistory = []
+var resourceChart
 //var space_max = 100;
 
 function load(){
@@ -34,7 +45,30 @@ function load(){
     
     //fix
     document.getElementById("p_mach_cost").innerHTML = Math.floor(init_p_mach_cost * Math.pow(1.1,p_mechs));
-    
+    document.getElementById("managers").innerHTML = managers;
+    document.getElementById("manager_cost").innerHTML = manager_cost;
+    document.getElementById("manager_efficiency").innerHTML = manager_efficiency;
+    document.getElementById("manager_efficiency_cost").innerHTML = manager_efficiency_cost;
+    document.getElementById("negotiate_cooldown").innerHTML = negotiate_cooldown;
+
+    var ctx = document.getElementById('resourceChart').getContext('2d');
+    resourceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Credits',
+                data: creditHistory,
+                borderColor: 'gold',
+                fill: false
+            }, {
+                label: 'Power',
+                data: powerHistory,
+                borderColor: 'cyan',
+                fill: false
+            }]
+        }
+    });
 }
 
 function getCredits(){
@@ -104,8 +138,64 @@ function upgradePedalMachine(){
     }
 }
 
+function buyManager(){
+    if(current_credits >= manager_cost){
+        managers = managers + 1
+        current_credits = current_credits - manager_cost
+        document.getElementById("managers").innerHTML = managers;
+        document.getElementById("current_credits").innerHTML = current_credits;
+        manager_cost = Math.floor(manager_cost * 1.5)
+        document.getElementById("manager_cost").innerHTML = manager_cost;
+    }
+}
+
+function upgradeManagerEfficiency(){
+    if(current_credits >= manager_efficiency_cost){
+        current_credits = current_credits - manager_efficiency_cost
+        manager_efficiency = manager_efficiency + 1
+        manager_efficiency_cost = Math.floor(manager_efficiency_cost * 2)
+        document.getElementById("manager_efficiency").innerHTML = manager_efficiency;
+        document.getElementById("manager_efficiency_cost").innerHTML = manager_efficiency_cost;
+    }
+}
+
+function negotiatePowerPrice(){
+    if(negotiate_cooldown == 0){
+        current_power_price = current_power_price * 2
+        document.getElementById("current_power_price").innerHTML = current_power_price;
+        negotiate_cooldown = 60
+        document.getElementById("negotiate_cooldown").innerHTML = negotiate_cooldown;
+        setTimeout(function(){
+            current_power_price = base_power_price
+            document.getElementById("current_power_price").innerHTML = current_power_price;
+        }, 10000)
+    }
+}
+
+function updateChart(){
+    creditHistory.push(current_credits)
+    powerHistory.push(current_gen)
+    resourceChart.data.labels.push("")
+    if(creditHistory.length > 20){
+        creditHistory.shift()
+        powerHistory.shift()
+        resourceChart.data.labels.shift()
+    }
+    resourceChart.update()
+}
+
 window.setInterval(function(){
-    //buyWorker(p_mechs)
+    if(managers > 0){
+        for(var i = 0; i < manager_efficiency; i++){
+            buyWorker(1)
+            buyPedalMachine()
+        }
+    }
+    if(negotiate_cooldown > 0){
+        negotiate_cooldown = negotiate_cooldown - 1
+        document.getElementById("negotiate_cooldown").innerHTML = negotiate_cooldown;
+    }
     getCredits()
+    updateChart()
     document.getElementById("current_credits").innerHTML = current_credits;
 }, 1000);
