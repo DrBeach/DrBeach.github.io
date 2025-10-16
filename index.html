@@ -3,6 +3,7 @@
 <head>
         <link rel="stylesheet" type="text/css" href="interface.css" />
         <title>Idle game</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
 </head>
 <body onload="load();">
         <p>Welcome!!!!</p>
@@ -16,6 +17,9 @@
         <h2>Avliable areas:</h2>
         <button type="button" onclick="show_area('factory_floor')">Factory floor</button>
         <button type="button" onclick="show_area('laboratory')">Laboratory</button>
+        <button type="button" onclick="show_area('management')">Management</button>
+        <button type="button" onclick="show_area('dashboard')">Dashboard</button>
+        <button type="button" onclick="show_area('admin')">Admin</button>
         <hr>
         <div id = "factory_floor" style="display: Block;">
                 <br />
@@ -35,9 +39,41 @@
                 <button type="button" onclick="upgradePedalMachine()">Prototype Pedal Machine Upgrade</button>
                 <p>Current kw/h: <span id="p_mech_eff2">0</span></p>
                 <p>Upgrade cost: $<span id="p_mech_prototype_cost">0</span></p>
-                <p>Upgrade chance: <span id="p_mech_upgrade_chance">0</span></p>                
+                <p>Upgrade chance: <span id="p_mech_upgrade_chance">0</span></p>
+                <br />
+                <button type="button" onclick="upgradeManagerEfficiency()">Improve Manager Efficiency</button>
+                <p>Manager Efficiency: <span id="manager_efficiency">1</span>x</p>
+                <p>Cost: $<span id="manager_efficiency_cost">0</span></p>
+        </div>
+
+        <div id = "management" style="display: None;">
+                <br />
+                <button type="button" onclick="buyManager(1)">Hire Manager</button>
+                <p>Managers: <span id="managers">0</span></p>
+                <p>Cost: $<span id="manager_cost">0</span></p>
+                <br />
+                <button type="button" onclick="negotiatePowerPrice()">Negotiate Power Price</button>
+                <p>Cooldown: <span id="negotiate_cooldown">0</span>s</p>
+        </div>
+
+        <div id = "dashboard" style="display: None;">
+                <br />
+                <h3>Credit History</h3>
+                <canvas id="creditChart" class="chart"></canvas>
+                <h3>Power History</h3>
+                <canvas id="powerChart" class="chart"></canvas>
+        </div>
+
+        <div id = "admin" style="display: None;">
+                <br />
+                <button type="button" onclick="runSimulationTest()">Run Simulation Test</button>
+                <p>Result: <span id="sim_test_result"></span></p>
+                <br />
+                <button type="button" onclick="runUnitTests()">Run Unit Tests</button>
+                <p>Result: <span id="unit_test_result"></span></p>
         </div>
         <p>End</p>
         <script type="text/javascript" src="main.js"></script>
+        <script type="text/javascript" src="tests.js"></script>
 </body>
 </html>
