@@ -1,14 +1,3 @@
-// Helper function to reset the game state for each test
-function resetGameStateForTest() {
-    current_gen = 0;
-    current_power_price = 2;
-    current_credits = 100;
-    workers = 0;
-    p_mechs = 0;
-    managers = 0;
-    // Reset other relevant variables to their initial state
-}
-
 // Helper function for assertions
 function assertEquals(expected, actual, message) {
     if (expected !== actual) {

@@ -25,7 +25,8 @@ var areas = ["factory_floor", "laboratory", "management", "dashboard", "admin"]
 
 var creditHistory = []
 var powerHistory = []
-var resourceChart
+var creditChart
+var powerChart
 //var space_max = 100;
 
 function load(){
@@ -51,8 +52,8 @@ function load(){
     document.getElementById("manager_efficiency_cost").innerHTML = manager_efficiency_cost;
     document.getElementById("negotiate_cooldown").innerHTML = negotiate_cooldown;
 
-    var ctx = document.getElementById('resourceChart').getContext('2d');
-    resourceChart = new Chart(ctx, {
+    var creditCtx = document.getElementById('creditChart').getContext('2d');
+    creditChart = new Chart(creditCtx, {
         type: 'line',
         data: {
             labels: [],
@@ -61,7 +62,16 @@ function load(){
                 data: creditHistory,
                 borderColor: 'gold',
                 fill: false
-            }, {
+            }]
+        }
+    });
+
+    var powerCtx = document.getElementById('powerChart').getContext('2d');
+    powerChart = new Chart(powerCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
                 label: 'Power',
                 data: powerHistory,
                 borderColor: 'cyan',
@@ -173,15 +183,23 @@ function negotiatePowerPrice(){
 }
 
 function updateChart(){
-    creditHistory.push(current_credits)
-    powerHistory.push(current_gen)
-    resourceChart.data.labels.push("")
+    // Update credit chart
+    creditHistory.push(current_credits);
+    creditChart.data.labels.push("");
     if(creditHistory.length > 20){
-        creditHistory.shift()
-        powerHistory.shift()
-        resourceChart.data.labels.shift()
+        creditHistory.shift();
+        creditChart.data.labels.shift();
     }
-    resourceChart.update()
+    creditChart.update();
+
+    // Update power chart
+    powerHistory.push(current_gen);
+    powerChart.data.labels.push("");
+    if(powerHistory.length > 20){
+        powerHistory.shift();
+        powerChart.data.labels.shift();
+    }
+    powerChart.update();
 }
 
 window.setInterval(function(){
@@ -201,19 +219,48 @@ window.setInterval(function(){
 }, 1000);
 
 function runSimulationTest(){
+    // Reset the game state to ensure a clean test run
+    resetGameStateForTest();
     var initial_credits = current_credits;
+    document.getElementById("sim_test_result").innerHTML = "Running...";
+
     var sim_interval = setInterval(function(){
-        buyWorker(1);
+        // Intelligent purchasing logic
+        let current_income = (current_power_price * current_gen) - work_cost_per_hour;
+        let next_worker_cost = work_cost * (workers + 1);
+
+        // Only hire a worker if it's profitable
+        if (current_income > next_worker_cost) {
+            buyWorker(1);
+        }
+
+        // Buy machines if affordable
         buyPedalMachine();
+
         getCredits();
-    }, 10);
+    }, 10); // Run at an accelerated speed
 
     setTimeout(function(){
         clearInterval(sim_interval);
+        // The test passes if credits have increased, indicating a profitable simulation
         if(current_credits > initial_credits){
             document.getElementById("sim_test_result").innerHTML = "Passed";
         } else {
-            document.getElementById("sim_test_result").innerHTML = "Failed";
+            document.getElementById("sim_test_result").innerHTML = `Failed (Credits started at ${initial_credits} and ended at ${current_credits})`;
         }
-    }, 3000);
+        // It's good practice to reset the state again after the test
+        resetGameStateForTest();
+        load(); // Reload the UI to reflect the reset state
+    }, 3000); // Run the simulation for 3 seconds
+}
+
+function resetGameStateForTest() {
+    current_gen = 0;
+    current_power_price = 2;
+    current_credits = 100;
+    workers = 0;
+    p_mechs = 0;
+    managers = 0;
+    work_cost_per_hour = 0;
+    // Reset other relevant variables to their initial state
 }

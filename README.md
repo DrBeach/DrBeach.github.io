@@ -26,24 +26,30 @@ This is a simple idle game where you manage a power generation facility. The goa
 *   **Manager Efficiency Upgrade:** In the "Laboratory," you can now upgrade the efficiency of your managers, allowing them to purchase more workers and machines at a time.
 *   **Power Price Negotiation:** In the "Management" section, you can now negotiate the price of power, which will temporarily double the sale price. This ability has a cooldown period.
 
+## Future Vision
+
+The long-term vision for this game is to evolve it from a simple idle generator into a more complex power market simulation. The initial phase focuses on building up a power generation infrastructure. As the game progresses, the core mechanics will shift. Players will enter a competitive power market where simply producing more energy isn't enough to guarantee success. They will need to manage power distribution to different areas, navigate dynamic market prices, and even engage in political maneuvering—like lobbying or bribing local governments—to ensure their company is preferred over competitors.
+
 ## Development Roadmap
 
-Here is a brief outline of the planned features for the next five revisions:
+Here is a brief outline of the planned features for the next few revisions, aimed at building towards the future vision:
 
-*   **Revision 0.2 (In Progress):** Quality of Life & Testing
-    *   Implement a testing framework with an admin panel.
-    *   Add simulation and unit tests.
-    *   Adjust UI elements for better user experience (e.g., resizing the graph).
+*   **Revision 0.3 (In Progress):** Bug Fixes & UI Improvements
+    *   Fix the simulation test to prevent credits from going negative.
+    *   Improve the graph by splitting it into two and adjusting the styling.
+    *   Implement automated verification for the unit tests.
 
-*   **Revision 0.3:** Advanced Upgrades
-    *   Introduce tiered upgrades for workers and machines.
-    *   Add upgrades that unlock new abilities or game mechanics.
+*   **Revision 0.4:** Introduction to the Power Market
+    *   Introduce a dynamic market price for power that fluctuates.
+    *   Add more advanced upgrades for generation and efficiency.
 
-*   **Revision 0.4:** New Resource Management
-    *   Introduce a new resource (e.g., "parts" or "research points") to add more strategic depth.
+*   **Revision 0.5:** Power Distribution
+    *   Unlock a new "City Map" area.
+    *   Allow players to build power lines to different neighborhoods, each with unique power demands and rewards.
 
-*   **Revision 0.5:** Prestige System
-    *   Implement a prestige mechanic that allows players to reset their game for powerful, permanent boosts.
+*   **Revision 0.6:** Political Influence
+    *   Introduce a "City Hall" area.
+    *   Players can spend credits on lobbying or other activities to gain advantages in the market.
 
-*   **Revision 0.6:** Expanded Content
-    *   Add a new type of power generator or a new area to unlock and manage.
+*   **Revision 0.7:** AI Competitors
+    *   Introduce AI-controlled companies that compete with the player in the power market, making the political and economic game more challenging.
