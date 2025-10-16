@@ -13,7 +13,16 @@
         <p>Current sale price is: $<span id="current_power_price">0</span> per kW/h</p>
         <p>Credits per hour: $<span id="current_per_hour">0</span></p>
         <p>Current credits: $<span id="current_credits">0</span></p>
+        <p>Negotiation Timer: <span id="negotiate_timer">0</span>s</p>
         <br>
+        <div id="manager_controls" style="display: none;">
+            <h2>Manager Controls</h2>
+            <label><input type="checkbox" id="autobuy_worker" onchange="toggleAutoBuy('worker')"> Auto-buy Workers</label>
+            <label><input type="checkbox" id="autobuy_pedal_machine" onchange="toggleAutoBuy('pedal_machine')"> Auto-buy Pedal Machines</label>
+            <label><input type="checkbox" id="autobuy_solar_panel" onchange="toggleAutoBuy('solar_panel')"> Auto-buy Solar Panels</label>
+            <label><input type="checkbox" id="autobuy_wind_turbine" onchange="toggleAutoBuy('wind_turbine')"> Auto-buy Wind Turbines</label>
+            <label><input type="checkbox" id="autobuy_nuclear_reactor" onchange="toggleAutoBuy('nuclear_reactor')"> Auto-buy Nuclear Reactors</label>
+        </div>
         <h2>Avliable areas:</h2>
         <button type="button" onclick="show_area('factory_floor')">Factory floor</button>
         <button type="button" onclick="show_area('laboratory')">Laboratory</button>
@@ -37,6 +46,16 @@
                 <p>kw/h: <span id="solar_panel_eff">0</span></p>
                 <p>Cost: <span id="solar_panel_cost">0</span></p>
                 <br />
+                <button type="button" onclick="buyWindTurbine(1)">Buy Wind Turbine</button>
+                <p>Wind Turbines: <span id="wind_turbines">0</span></p>
+                <p>kw/h: <span id="wind_turbine_eff">0</span></p>
+                <p>Cost: <span id="wind_turbine_cost">0</span></p>
+                <br />
+                <button type="button" onclick="buyNuclearReactor(1)">Buy Nuclear Reactor</button>
+                <p>Nuclear Reactors: <span id="nuclear_reactors">0</span></p>
+                <p>kw/h: <span id="nuclear_reactor_eff">0</span></p>
+                <p>Cost: <span id="nuclear_reactor_cost">0</span></p>
+                <br />
         </div>
 
         <div id = "laboratory" style="display: None;">
@@ -53,6 +72,14 @@
                 <button type="button" onclick="upgradeSolarPanel()">Upgrade Solar Panels</button>
                 <p>Current kw/h: <span id="solar_panel_eff2">0</span></p>
                 <p>Upgrade cost: $<span id="solar_panel_upgrade_cost">0</span></p>
+                <br />
+                <button type="button" onclick="upgradeWindTurbine()">Upgrade Wind Turbines</button>
+                <p>Current kw/h: <span id="wind_turbine_eff2">0</span></p>
+                <p>Upgrade cost: $<span id="wind_turbine_upgrade_cost">0</span></p>
+                <br />
+                <button type="button" onclick="upgradeNuclearReactor()">Upgrade Nuclear Reactors</button>
+                <p>Current kw/h: <span id="nuclear_reactor_eff2">0</span></p>
+                <p>Upgrade cost: $<span id="nuclear_reactor_upgrade_cost">0</span></p>
         </div>
 
         <div id = "management" style="display: None;">
@@ -60,6 +87,15 @@
                 <button type="button" onclick="buyManager(1)">Hire Manager</button>
                 <p>Managers: <span id="managers">0</span></p>
                 <p>Cost: $<span id="manager_cost">0</span></p>
+                <br />
+                <button type="button" onclick="upgradeManager('solar')">Unlock Solar Panel Automation</button>
+                <p>Cost: $<span id="manager_upgrade_solar_cost">0</span></p>
+                <br />
+                <button type="button" onclick="upgradeManager('wind')">Unlock Wind Turbine Automation</button>
+                <p>Cost: $<span id="manager_upgrade_wind_cost">0</span></p>
+                <br />
+                <button type="button" onclick="upgradeManager('nuclear')">Unlock Nuclear Reactor Automation</button>
+                <p>Cost: $<span id="manager_upgrade_nuclear_cost">0</span></p>
                 <br />
                 <button type="button" onclick="negotiatePowerPrice()">Negotiate Power Price</button>
                 <p>Cooldown: <span id="negotiate_cooldown">0</span>s</p>
@@ -80,6 +116,8 @@
                 <br />
                 <button type="button" onclick="runUnitTests()">Run Unit Tests</button>
                 <p>Result: <span id="unit_test_result"></span></p>
+                <br />
+                <button type="button" onclick="cheat()">Add $500</button>
         </div>
         <p>End</p>
         <script type="text/javascript" src="main.js"></script>

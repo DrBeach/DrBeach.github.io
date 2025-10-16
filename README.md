@@ -19,9 +19,17 @@ This is a simple idle game where you manage a power generation facility. The goa
 
 ## Revision History
 
-### Revision 0.4 (In Progress)
+### Revision 0.4
 
-*   **New Power Source:** Added Solar Panels as a new, passive way to generate power.
+*   **New Power Generators:** Added Wind Turbines and Nuclear Reactors, providing more diverse and powerful energy sources.
+*   **Dynamic Market Price:** The price of power now fluctuates, creating a more dynamic and strategic market.
+*   **Enhanced Manager Controls:**
+    *   A new persistent UI now displays manager auto-buy toggles for granular control.
+    *   Managers can now be upgraded to unlock the ability to purchase new types of power generators.
+*   **UI & Quality-of-Life:**
+    *   A visible countdown timer for the "Negotiate Power Price" ability has been added.
+    *   A "cheat" button in the admin panel allows for easier testing by adding credits.
+*   **Improved Simulation Test:** The simulation test now uses more intelligent, state-aware logic to make strategic purchasing decisions.
 *   **Bug Fixes:**
     *   The Pedal Machine upgrade now correctly uses probability.
     *   Managers are now smarter about only hiring workers when there is a machine for them to use.
