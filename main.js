@@ -436,6 +436,89 @@ function updateChart(){
     powerChart.update();
 }
 
+function buySolarPanel(){
+    if(current_credits >= solar_panel_cost){
+        solar_panels++;
+        current_credits -= solar_panel_cost;
+        solar_panel_cost = Math.floor(solar_panel_cost * 1.2);
+
+        getCurrentGen();
+
+        document.getElementById("solar_panels").innerHTML = solar_panels;
+        document.getElementById("solar_panel_cost").innerHTML = solar_panel_cost;
+        document.getElementById("current_credits").innerHTML = current_credits;
+    }
+}
+
+function upgradeSolarPanel(){
+    if(current_credits >= solar_panel_upgrade_cost){
+        current_credits -= solar_panel_upgrade_cost;
+        solar_panel_eff = fixFloat(solar_panel_eff + 1);
+        solar_panel_upgrade_cost = Math.floor(solar_panel_upgrade_cost * 1.8);
+
+        getCurrentGen();
+
+        document.getElementById("solar_panel_eff").innerHTML = solar_panel_eff;
+        document.getElementById("solar_panel_eff2").innerHTML = solar_panel_eff;
+        document.getElementById("solar_panel_upgrade_cost").innerHTML = solar_panel_upgrade_cost;
+        document.getElementById("current_credits").innerHTML = current_credits;
+    }
+}
+
+function buyManager(){
+    if(current_credits >= manager_cost){
+        managers = managers + 1
+        current_credits = current_credits - manager_cost
+        document.getElementById("managers").innerHTML = managers;
+        document.getElementById("current_credits").innerHTML = current_credits;
+        manager_cost = Math.floor(manager_cost * 1.5)
+        document.getElementById("manager_cost").innerHTML = manager_cost;
+    }
+}
+
+function upgradeManagerEfficiency(){
+    if(current_credits >= manager_efficiency_cost){
+        current_credits = current_credits - manager_efficiency_cost
+        manager_efficiency = manager_efficiency + 1
+        manager_efficiency_cost = Math.floor(manager_efficiency_cost * 2)
+        document.getElementById("manager_efficiency").innerHTML = manager_efficiency;
+        document.getElementById("manager_efficiency_cost").innerHTML = manager_efficiency_cost;
+    }
+}
+
+function negotiatePowerPrice(){
+    if(negotiate_cooldown == 0){
+        current_power_price = current_power_price * 2
+        document.getElementById("current_power_price").innerHTML = current_power_price;
+        negotiate_cooldown = 60
+        document.getElementById("negotiate_cooldown").innerHTML = negotiate_cooldown;
+        setTimeout(function(){
+            current_power_price = base_power_price
+            document.getElementById("current_power_price").innerHTML = current_power_price;
+        }, 10000)
+    }
+}
+
+function updateChart(){
+    // Update credit chart
+    creditHistory.push(current_credits);
+    creditChart.data.labels.push("");
+    if(creditHistory.length > 20){
+        creditHistory.shift();
+        creditChart.data.labels.shift();
+    }
+    creditChart.update();
+
+    // Update power chart
+    powerHistory.push(current_gen);
+    powerChart.data.labels.push("");
+    if(powerHistory.length > 20){
+        powerHistory.shift();
+        powerChart.data.labels.shift();
+    }
+    powerChart.update();
+}
+
 window.setInterval(function(){
     if(managers > 0){
         for(var i = 0; i < manager_efficiency; i++){
