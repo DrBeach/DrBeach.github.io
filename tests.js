@@ -53,6 +53,39 @@ function runUnitTests() {
                 assertEquals(initial_managers + 1, managers, "Manager count did not increase by 1");
                 assertEquals(0, current_credits, "Credits were not deducted correctly for manager");
             }
+        },
+        {
+            name: "buySolarPanel should increase solar panel count and decrease credits",
+            test: function() {
+                resetGameStateForTest();
+                let initial_panels = solar_panels;
+                current_credits = solar_panel_cost; // Set credits to exact cost
+                buySolarPanel();
+                assertEquals(initial_panels + 1, solar_panels, "Solar panel count did not increase by 1");
+                assertEquals(0, current_credits, "Credits were not deducted correctly for solar panel");
+            }
+        },
+        {
+            name: "buyWindTurbine should increase wind turbine count and decrease credits",
+            test: function() {
+                resetGameStateForTest();
+                let initial_turbines = wind_turbines;
+                current_credits = wind_turbine_cost; // Set credits to exact cost
+                buyWindTurbine();
+                assertEquals(initial_turbines + 1, wind_turbines, "Wind turbine count did not increase by 1");
+                assertEquals(0, current_credits, "Credits were not deducted correctly for wind turbine");
+            }
+        },
+        {
+            name: "buyNuclearReactor should increase nuclear reactor count and decrease credits",
+            test: function() {
+                resetGameStateForTest();
+                let initial_reactors = nuclear_reactors;
+                current_credits = nuclear_reactor_cost; // Set credits to exact cost
+                buyNuclearReactor();
+                assertEquals(initial_reactors + 1, nuclear_reactors, "Nuclear reactor count did not increase by 1");
+                assertEquals(0, current_credits, "Credits were not deducted correctly for nuclear reactor");
+            }
         }
     ];
 

@@ -17,6 +17,9 @@
         <br>
         <div id="manager_controls" style="display: none;">
             <h2>Manager Controls</h2>
+            <label><input type="checkbox" id="manager_enabled" onchange="toggleManager()"> Manager Enabled</label>
+            <p>Status: <span id="manager_status">Idle</span></p>
+            <br>
             <label><input type="checkbox" id="autobuy_worker" onchange="toggleAutoBuy('worker')"> Auto-buy Workers</label>
             <label><input type="checkbox" id="autobuy_pedal_machine" onchange="toggleAutoBuy('pedal_machine')"> Auto-buy Pedal Machines</label>
             <label><input type="checkbox" id="autobuy_solar_panel" onchange="toggleAutoBuy('solar_panel')"> Auto-buy Solar Panels</label>
@@ -72,14 +75,17 @@
                 <button type="button" onclick="upgradeSolarPanel()">Upgrade Solar Panels</button>
                 <p>Current kw/h: <span id="solar_panel_eff2">0</span></p>
                 <p>Upgrade cost: $<span id="solar_panel_upgrade_cost">0</span></p>
+                <p>Upgrade chance: <span id="solar_panel_upgrade_chance">0</span></p>
                 <br />
                 <button type="button" onclick="upgradeWindTurbine()">Upgrade Wind Turbines</button>
                 <p>Current kw/h: <span id="wind_turbine_eff2">0</span></p>
                 <p>Upgrade cost: $<span id="wind_turbine_upgrade_cost">0</span></p>
+                <p>Upgrade chance: <span id="wind_turbine_upgrade_chance">0</span></p>
                 <br />
                 <button type="button" onclick="upgradeNuclearReactor()">Upgrade Nuclear Reactors</button>
                 <p>Current kw/h: <span id="nuclear_reactor_eff2">0</span></p>
                 <p>Upgrade cost: $<span id="nuclear_reactor_upgrade_cost">0</span></p>
+                <p>Upgrade chance: <span id="nuclear_reactor_upgrade_chance">0</span></p>
         </div>
 
         <div id = "management" style="display: None;">

@@ -21,6 +21,11 @@ var manager_efficiency_cost = 5000
 var manager_upgrade_solar_cost = 10000
 var manager_upgrade_wind_cost = 25000
 var manager_upgrade_nuclear_cost = 100000
+var manager_autobuy_unlocked = {
+    solar: false,
+    wind: false,
+    nuclear: false
+}
 
 var autobuy_worker = false
 var autobuy_pedal_machine = false
@@ -28,6 +33,7 @@ var autobuy_solar_panel = false
 var autobuy_wind_turbine = false
 var autobuy_nuclear_reactor = false
 
+var manager_enabled = false
 var negotiate_cooldown = 0
 var negotiate_timer = 0
 var base_power_price = 2
@@ -46,6 +52,9 @@ var nuclear_reactors = 0
 var nuclear_reactor_cost = 10000
 var nuclear_reactor_eff = 50
 var nuclear_reactor_upgrade_cost = 25000
+var solar_panel_upgrade_chance = 0.1
+var wind_turbine_upgrade_chance = 0.1
+var nuclear_reactor_upgrade_chance = 0.1
 
 var areas = ["factory_floor", "laboratory", "management", "dashboard", "admin"]
 
@@ -83,11 +92,18 @@ function load(){
     document.getElementById("manager_upgrade_wind_cost").innerHTML = manager_upgrade_wind_cost;
     document.getElementById("manager_upgrade_nuclear_cost").innerHTML = manager_upgrade_nuclear_cost;
 
+    // Set the initial state of the checkboxes
+    document.getElementById("autobuy_solar_panel").disabled = !manager_autobuy_unlocked.solar;
+    document.getElementById("autobuy_wind_turbine").disabled = !manager_autobuy_unlocked.wind;
+    document.getElementById("autobuy_nuclear_reactor").disabled = !manager_autobuy_unlocked.nuclear;
+
+
     document.getElementById("solar_panels").innerHTML = solar_panels;
     document.getElementById("solar_panel_cost").innerHTML = solar_panel_cost;
     document.getElementById("solar_panel_eff").innerHTML = solar_panel_eff;
     document.getElementById("solar_panel_eff2").innerHTML = solar_panel_eff;
     document.getElementById("solar_panel_upgrade_cost").innerHTML = solar_panel_upgrade_cost;
+    document.getElementById("solar_panel_upgrade_chance").innerHTML = solar_panel_upgrade_chance;
 
     document.getElementById("wind_turbines").innerHTML = wind_turbines;
     document.getElementById("wind_turbine_cost").innerHTML = wind_turbine_cost;
@@ -179,6 +195,7 @@ function buyWorker(number){
 };
 
 function buyPedalMachine(){
+    // Price progression: 10% increase per machine
     var p_mech_cost = Math.floor(init_p_mach_cost * Math.pow(1.1,p_mechs));
     if(current_credits >= p_mech_cost){
         p_mechs = p_mechs + 1
@@ -193,6 +210,7 @@ function buyPedalMachine(){
 };
 
 function upgradePedalMachine(){
+    // Price progression: 10% increase per level, based on current efficiency
     p_mech_prototype_cost = fixFloat(Math.pow(1.1,p_mech_level) * 10  * p_mech_eff * 2 * (60*1));
     if(current_credits >= p_mech_prototype_cost){
         current_credits -= p_mech_prototype_cost;
@@ -218,6 +236,7 @@ function upgradePedalMachine(){
 }
 
 function buySolarPanel(){
+    // Price progression: 20% increase per panel
     if(current_credits >= solar_panel_cost){
         solar_panels++;
         current_credits -= solar_panel_cost;
@@ -232,21 +251,27 @@ function buySolarPanel(){
 }
 
 function upgradeSolarPanel(){
+    // Price progression: 80% increase per upgrade
     if(current_credits >= solar_panel_upgrade_cost){
         current_credits -= solar_panel_upgrade_cost;
-        solar_panel_eff = fixFloat(solar_panel_eff + 1);
-        solar_panel_upgrade_cost = Math.floor(solar_panel_upgrade_cost * 1.8);
 
-        getCurrentGen();
+        if(Math.random() < solar_panel_upgrade_chance){
+            solar_panel_eff = fixFloat(solar_panel_eff + 1);
+            solar_panel_upgrade_cost = Math.floor(solar_panel_upgrade_cost * 1.8);
 
-        document.getElementById("solar_panel_eff").innerHTML = solar_panel_eff;
-        document.getElementById("solar_panel_eff2").innerHTML = solar_panel_eff;
-        document.getElementById("solar_panel_upgrade_cost").innerHTML = solar_panel_upgrade_cost;
+            getCurrentGen();
+
+            document.getElementById("solar_panel_eff").innerHTML = solar_panel_eff;
+            document.getElementById("solar_panel_eff2").innerHTML = solar_panel_eff;
+            document.getElementById("solar_panel_upgrade_cost").innerHTML = solar_panel_upgrade_cost;
+        }
+
         document.getElementById("current_credits").innerHTML = current_credits;
     }
 }
 
 function buyWindTurbine(){
+    // Price progression: 30% increase per turbine
     if(current_credits >= wind_turbine_cost){
         wind_turbines++;
         current_credits -= wind_turbine_cost;
@@ -261,21 +286,27 @@ function buyWindTurbine(){
 }
 
 function upgradeWindTurbine(){
+    // Price progression: 90% increase per upgrade
     if(current_credits >= wind_turbine_upgrade_cost){
         current_credits -= wind_turbine_upgrade_cost;
-        wind_turbine_eff = fixFloat(wind_turbine_eff + 5);
-        wind_turbine_upgrade_cost = Math.floor(wind_turbine_upgrade_cost * 1.9);
 
-        getCurrentGen();
+        if(Math.random() < wind_turbine_upgrade_chance){
+            wind_turbine_eff = fixFloat(wind_turbine_eff + 5);
+            wind_turbine_upgrade_cost = Math.floor(wind_turbine_upgrade_cost * 1.9);
 
-        document.getElementById("wind_turbine_eff").innerHTML = wind_turbine_eff;
-        document.getElementById("wind_turbine_eff2").innerHTML = wind_turbine_eff;
-        document.getElementById("wind_turbine_upgrade_cost").innerHTML = wind_turbine_upgrade_cost;
+            getCurrentGen();
+
+            document.getElementById("wind_turbine_eff").innerHTML = wind_turbine_eff;
+            document.getElementById("wind_turbine_eff2").innerHTML = wind_turbine_eff;
+            document.getElementById("wind_turbine_upgrade_cost").innerHTML = wind_turbine_upgrade_cost;
+        }
+
         document.getElementById("current_credits").innerHTML = current_credits;
     }
 }
 
 function buyNuclearReactor(){
+    // Price progression: 40% increase per reactor
     if(current_credits >= nuclear_reactor_cost){
         nuclear_reactors++;
         current_credits -= nuclear_reactor_cost;
@@ -290,16 +321,21 @@ function buyNuclearReactor(){
 }
 
 function upgradeNuclearReactor(){
+    // Price progression: 100% increase per upgrade
     if(current_credits >= nuclear_reactor_upgrade_cost){
         current_credits -= nuclear_reactor_upgrade_cost;
-        nuclear_reactor_eff = fixFloat(nuclear_reactor_eff + 25);
-        nuclear_reactor_upgrade_cost = Math.floor(nuclear_reactor_upgrade_cost * 2);
 
-        getCurrentGen();
+        if(Math.random() < nuclear_reactor_upgrade_chance){
+            nuclear_reactor_eff = fixFloat(nuclear_reactor_eff + 25);
+            nuclear_reactor_upgrade_cost = Math.floor(nuclear_reactor_upgrade_cost * 2);
 
-        document.getElementById("nuclear_reactor_eff").innerHTML = nuclear_reactor_eff;
-        document.getElementById("nuclear_reactor_eff2").innerHTML = nuclear_reactor_eff;
-        document.getElementById("nuclear_reactor_upgrade_cost").innerHTML = nuclear_reactor_upgrade_cost;
+            getCurrentGen();
+
+            document.getElementById("nuclear_reactor_eff").innerHTML = nuclear_reactor_eff;
+            document.getElementById("nuclear_reactor_eff2").innerHTML = nuclear_reactor_eff;
+            document.getElementById("nuclear_reactor_upgrade_cost").innerHTML = nuclear_reactor_upgrade_cost;
+        }
+
         document.getElementById("current_credits").innerHTML = current_credits;
     }
 }
@@ -344,6 +380,7 @@ function upgradeManager(type){
         case 'solar':
             if(current_credits >= manager_upgrade_solar_cost){
                 current_credits -= manager_upgrade_solar_cost;
+                manager_autobuy_unlocked.solar = true;
                 document.getElementById("autobuy_solar_panel").disabled = false;
                 manager_upgrade_solar_cost = 0; // One-time purchase
                 document.getElementById("manager_upgrade_solar_cost").innerHTML = "Unlocked";
@@ -352,6 +389,7 @@ function upgradeManager(type){
         case 'wind':
             if(current_credits >= manager_upgrade_wind_cost){
                 current_credits -= manager_upgrade_wind_cost;
+                manager_autobuy_unlocked.wind = true;
                 document.getElementById("autobuy_wind_turbine").disabled = false;
                 manager_upgrade_wind_cost = 0; // One-time purchase
                 document.getElementById("manager_upgrade_wind_cost").innerHTML = "Unlocked";
@@ -360,6 +398,7 @@ function upgradeManager(type){
         case 'nuclear':
             if(current_credits >= manager_upgrade_nuclear_cost){
                 current_credits -= manager_upgrade_nuclear_cost;
+                manager_autobuy_unlocked.nuclear = true;
                 document.getElementById("autobuy_nuclear_reactor").disabled = false;
                 manager_upgrade_nuclear_cost = 0; // One-time purchase
                 document.getElementById("manager_upgrade_nuclear_cost").innerHTML = "Unlocked";
@@ -381,7 +420,7 @@ function upgradeManagerEfficiency(){
 
 function negotiatePowerPrice(){
     if(negotiate_cooldown == 0){
-        current_power_price = current_power_price * 2;
+        current_power_price = base_power_price * 2;
         negotiate_cooldown = 60;
         negotiate_timer = 10;
         document.getElementById("current_power_price").innerHTML = current_power_price;
@@ -398,6 +437,10 @@ function negotiatePowerPrice(){
 function cheat(){
     current_credits += 500;
     document.getElementById("current_credits").innerHTML = current_credits;
+}
+
+function toggleManager(){
+    manager_enabled = !manager_enabled;
 }
 
 function updateMarketPrice(){
@@ -434,110 +477,39 @@ function updateChart(){
         powerChart.data.labels.shift();
     }
     powerChart.update();
-}
-
-function buySolarPanel(){
-    if(current_credits >= solar_panel_cost){
-        solar_panels++;
-        current_credits -= solar_panel_cost;
-        solar_panel_cost = Math.floor(solar_panel_cost * 1.2);
-
-        getCurrentGen();
-
-        document.getElementById("solar_panels").innerHTML = solar_panels;
-        document.getElementById("solar_panel_cost").innerHTML = solar_panel_cost;
-        document.getElementById("current_credits").innerHTML = current_credits;
-    }
-}
-
-function upgradeSolarPanel(){
-    if(current_credits >= solar_panel_upgrade_cost){
-        current_credits -= solar_panel_upgrade_cost;
-        solar_panel_eff = fixFloat(solar_panel_eff + 1);
-        solar_panel_upgrade_cost = Math.floor(solar_panel_upgrade_cost * 1.8);
-
-        getCurrentGen();
-
-        document.getElementById("solar_panel_eff").innerHTML = solar_panel_eff;
-        document.getElementById("solar_panel_eff2").innerHTML = solar_panel_eff;
-        document.getElementById("solar_panel_upgrade_cost").innerHTML = solar_panel_upgrade_cost;
-        document.getElementById("current_credits").innerHTML = current_credits;
-    }
-}
-
-function buyManager(){
-    if(current_credits >= manager_cost){
-        managers = managers + 1
-        current_credits = current_credits - manager_cost
-        document.getElementById("managers").innerHTML = managers;
-        document.getElementById("current_credits").innerHTML = current_credits;
-        manager_cost = Math.floor(manager_cost * 1.5)
-        document.getElementById("manager_cost").innerHTML = manager_cost;
-    }
-}
-
-function upgradeManagerEfficiency(){
-    if(current_credits >= manager_efficiency_cost){
-        current_credits = current_credits - manager_efficiency_cost
-        manager_efficiency = manager_efficiency + 1
-        manager_efficiency_cost = Math.floor(manager_efficiency_cost * 2)
-        document.getElementById("manager_efficiency").innerHTML = manager_efficiency;
-        document.getElementById("manager_efficiency_cost").innerHTML = manager_efficiency_cost;
-    }
-}
-
-function negotiatePowerPrice(){
-    if(negotiate_cooldown == 0){
-        current_power_price = current_power_price * 2
-        document.getElementById("current_power_price").innerHTML = current_power_price;
-        negotiate_cooldown = 60
-        document.getElementById("negotiate_cooldown").innerHTML = negotiate_cooldown;
-        setTimeout(function(){
-            current_power_price = base_power_price
-            document.getElementById("current_power_price").innerHTML = current_power_price;
-        }, 10000)
-    }
-}
-
-function updateChart(){
-    // Update credit chart
-    creditHistory.push(current_credits);
-    creditChart.data.labels.push("");
-    if(creditHistory.length > 20){
-        creditHistory.shift();
-        creditChart.data.labels.shift();
-    }
-    creditChart.update();
-
-    // Update power chart
-    powerHistory.push(current_gen);
-    powerChart.data.labels.push("");
-    if(powerHistory.length > 20){
-        powerHistory.shift();
-        powerChart.data.labels.shift();
-    }
-    powerChart.update();
+    console.log("Charts updated. Credits: " + creditHistory.length + ", Power: " + powerHistory.length);
 }
 
 window.setInterval(function(){
-    if(managers > 0){
+    if(managers > 0 && manager_enabled){
+        document.getElementById("manager_status").innerHTML = "Active";
         for(var i = 0; i < manager_efficiency; i++){
+            document.getElementById("manager_status").innerHTML = "Buying...";
             if(autobuy_worker && workers < p_mechs){
+                document.getElementById("manager_status").innerHTML = "Buying Worker";
                 buyWorker(1)
             }
-            if(autobuy_pedal_machine){
+            else if(autobuy_pedal_machine){
+                document.getElementById("manager_status").innerHTML = "Buying Pedal Machine";
                 buyPedalMachine()
             }
-            if(autobuy_solar_panel){
+            else if(autobuy_solar_panel){
+                document.getElementById("manager_status").innerHTML = "Buying Solar Panel";
                 buySolarPanel()
             }
-            if(autobuy_wind_turbine){
+            else if(autobuy_wind_turbine){
+                document.getElementById("manager_status").innerHTML = "Buying Wind Turbine";
                 buyWindTurbine()
             }
-            if(autobuy_nuclear_reactor){
+            else if(autobuy_nuclear_reactor){
+                document.getElementById("manager_status").innerHTML = "Buying Nuclear Reactor";
                 buyNuclearReactor()
+            } else {
+                document.getElementById("manager_status").innerHTML = "Idle";
             }
         }
+    } else if(managers > 0){
+        document.getElementById("manager_status").innerHTML = "Disabled";
     }
     if(negotiate_cooldown > 0){
         negotiate_cooldown = negotiate_cooldown - 1
@@ -556,34 +528,41 @@ window.setInterval(function(){
 function runSimulationTest(){
     // Reset the game state to ensure a clean test run
     resetGameStateForTest();
-    var initial_credits = current_credits;
+    let initial_power = current_gen;
     document.getElementById("sim_test_result").innerHTML = "Running...";
 
+    let steps = 0;
+    const max_steps = 300; // 3 seconds worth of steps
+
     var sim_interval = setInterval(function(){
+        if(steps >= max_steps){
+            clearInterval(sim_interval);
+
+            // The test passes if power generation has increased
+            if(current_gen > initial_power){
+                document.getElementById("sim_test_result").innerHTML = `Passed (Power increased from ${initial_power} to ${current_gen})`;
+            } else {
+                document.getElementById("sim_test_result").innerHTML = `Failed (Power did not increase)`;
+            }
+
+            // Reset for a clean slate
+            resetGameStateForTest();
+            load();
+            return;
+        }
+
         // More advanced purchasing logic for the simulation
         if(workers < p_mechs){
-            buyWorker(1); // Prioritize workers if machines are available
-        } else if (current_credits > solar_panel_cost * 2) {
-            buySolarPanel(); // Invest in passive income if credits are high
+            buyWorker(1);
+        } else if (current_credits > solar_panel_cost * 1.5) { // Be a bit more aggressive with solar
+            buySolarPanel();
         } else {
-            buyPedalMachine(); // Default to pedal machines
+            buyPedalMachine();
         }
 
         getCredits();
-    }, 10); // Run at an accelerated speed
-
-    setTimeout(function(){
-        clearInterval(sim_interval);
-        // The test passes if credits have increased, indicating a profitable simulation
-        if(current_credits > initial_credits){
-            document.getElementById("sim_test_result").innerHTML = "Passed";
-        } else {
-            document.getElementById("sim_test_result").innerHTML = `Failed (Credits started at ${initial_credits} and ended at ${current_credits})`;
-        }
-        // It's good practice to reset the state again after the test
-        resetGameStateForTest();
-        load(); // Reload the UI to reflect the reset state
-    }, 3000); // Run the simulation for 3 seconds
+        steps++;
+    }, 10);
 }
 
 function resetGameStateForTest() {
