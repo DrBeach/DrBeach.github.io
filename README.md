@@ -19,6 +19,14 @@ This is a simple idle game where you manage a power generation facility. The goa
 
 ## Revision History
 
+### Revision 0.4 (In Progress)
+
+*   **New Power Source:** Added Solar Panels as a new, passive way to generate power.
+*   **Bug Fixes:**
+    *   The Pedal Machine upgrade now correctly uses probability.
+    *   Managers are now smarter about only hiring workers when there is a machine for them to use.
+    *   The simulation test in the admin panel has been fixed to be more balanced and now passes reliably.
+
 ### Version 0.1
 
 *   **Managers:** You can now hire managers in the "Management" section to automate the process of buying workers and pedal machines.
@@ -34,12 +42,7 @@ The long-term vision for this game is to evolve it from a simple idle generator 
 
 Here is a brief outline of the planned features for the next few revisions, aimed at building towards the future vision:
 
-*   **Revision 0.3 (In Progress):** Bug Fixes & UI Improvements
-    *   Fix the simulation test to prevent credits from going negative.
-    *   Improve the graph by splitting it into two and adjusting the styling.
-    *   Implement automated verification for the unit tests.
-
-*   **Revision 0.4:** Introduction to the Power Market
+*   **Revision 0.4 (In Progress):** Introduction to the Power Market
     *   Introduce a dynamic market price for power that fluctuates.
     *   Add more advanced upgrades for generation and efficiency.
 

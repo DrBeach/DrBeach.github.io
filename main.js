@@ -21,6 +21,11 @@ var manager_efficiency_cost = 5000
 var negotiate_cooldown = 0
 var base_power_price = 2
 
+var solar_panels = 0
+var solar_panel_cost = 500
+var solar_panel_eff = 2
+var solar_panel_upgrade_cost = 1000
+
 var areas = ["factory_floor", "laboratory", "management", "dashboard", "admin"]
 
 var creditHistory = []
@@ -51,6 +56,12 @@ function load(){
     document.getElementById("manager_efficiency").innerHTML = manager_efficiency;
     document.getElementById("manager_efficiency_cost").innerHTML = manager_efficiency_cost;
     document.getElementById("negotiate_cooldown").innerHTML = negotiate_cooldown;
+
+    document.getElementById("solar_panels").innerHTML = solar_panels;
+    document.getElementById("solar_panel_cost").innerHTML = solar_panel_cost;
+    document.getElementById("solar_panel_eff").innerHTML = solar_panel_eff;
+    document.getElementById("solar_panel_eff2").innerHTML = solar_panel_eff;
+    document.getElementById("solar_panel_upgrade_cost").innerHTML = solar_panel_upgrade_cost;
 
     var creditCtx = document.getElementById('creditChart').getContext('2d');
     creditChart = new Chart(creditCtx, {
@@ -103,8 +114,13 @@ function fixFloat(number){
 
 function getCurrentGen(){
     //p_mech gen
-    var max_utility = Math.max(p_mechs, workers) - (Math.max(p_mechs, workers) - Math.min(p_mechs, workers))
-    current_gen = fixFloat(max_utility * p_mech_eff)
+    var max_utility = Math.max(p_mechs, workers) - (Math.max(p_mechs, workers) - Math.min(p_mechs, workers));
+    var p_mech_power = max_utility * p_mech_eff;
+
+    //solar panel gen
+    var solar_power = solar_panels * solar_panel_eff;
+
+    current_gen = fixFloat(p_mech_power + solar_power);
     document.getElementById("current_gen").innerHTML = current_gen;
 }
 
@@ -133,18 +149,56 @@ function buyPedalMachine(){
 };
 
 function upgradePedalMachine(){
-    p_mech_prototype_cost = fixFloat(Math.pow(1.1,p_mech_level) * 10  * p_mech_eff * 2 * (60*1))
+    p_mech_prototype_cost = fixFloat(Math.pow(1.1,p_mech_level) * 10  * p_mech_eff * 2 * (60*1));
     if(current_credits >= p_mech_prototype_cost){
-        p_mech_eff = fixFloat(p_mech_eff + 0.2)
-        p_mech_eff2 = p_mech_eff
-        p_mech_level = p_mech_level + 1
-        current_credits = current_credits - p_mech_prototype_cost
-        current_credits = fixFloat(current_credits)
-        getCurrentGen()
-        p_mech_prototype_cost = fixFloat(Math.pow(1.1,p_mech_level) * 10  * p_mech_eff * 2 * (60*1))
-        document.getElementById("p_mech_prototype_cost").innerHTML = p_mech_prototype_cost
-        document.getElementById("p_mech_eff").innerHTML = p_mech_eff
-        document.getElementById("p_mech_eff2").innerHTML = p_mech_eff2
+        current_credits -= p_mech_prototype_cost;
+
+        if(Math.random() < p_mech_upgrade_chance){
+            p_mech_eff = fixFloat(p_mech_eff + 0.2);
+            p_mech_eff2 = p_mech_eff;
+            p_mech_level++;
+            getCurrentGen();
+
+            // Recalculate cost for the next level
+            p_mech_prototype_cost = fixFloat(Math.pow(1.1,p_mech_level) * 10  * p_mech_eff * 2 * (60*1));
+
+            // Update UI
+            document.getElementById("p_mech_prototype_cost").innerHTML = p_mech_prototype_cost;
+            document.getElementById("p_mech_eff").innerHTML = p_mech_eff;
+            document.getElementById("p_mech_eff2").innerHTML = p_mech_eff2;
+        }
+
+        current_credits = fixFloat(current_credits);
+        document.getElementById("current_credits").innerHTML = current_credits;
+    }
+}
+
+function buySolarPanel(){
+    if(current_credits >= solar_panel_cost){
+        solar_panels++;
+        current_credits -= solar_panel_cost;
+        solar_panel_cost = Math.floor(solar_panel_cost * 1.2);
+
+        getCurrentGen();
+
+        document.getElementById("solar_panels").innerHTML = solar_panels;
+        document.getElementById("solar_panel_cost").innerHTML = solar_panel_cost;
+        document.getElementById("current_credits").innerHTML = current_credits;
+    }
+}
+
+function upgradeSolarPanel(){
+    if(current_credits >= solar_panel_upgrade_cost){
+        current_credits -= solar_panel_upgrade_cost;
+        solar_panel_eff = fixFloat(solar_panel_eff + 1);
+        solar_panel_upgrade_cost = Math.floor(solar_panel_upgrade_cost * 1.8);
+
+        getCurrentGen();
+
+        document.getElementById("solar_panel_eff").innerHTML = solar_panel_eff;
+        document.getElementById("solar_panel_eff2").innerHTML = solar_panel_eff;
+        document.getElementById("solar_panel_upgrade_cost").innerHTML = solar_panel_upgrade_cost;
+        document.getElementById("current_credits").innerHTML = current_credits;
     }
 }
 
@@ -205,7 +259,9 @@ function updateChart(){
 window.setInterval(function(){
     if(managers > 0){
         for(var i = 0; i < manager_efficiency; i++){
-            buyWorker(1)
+            if(workers < p_mechs){
+                buyWorker(1)
+            }
             buyPedalMachine()
         }
     }
@@ -225,17 +281,12 @@ function runSimulationTest(){
     document.getElementById("sim_test_result").innerHTML = "Running...";
 
     var sim_interval = setInterval(function(){
-        // Intelligent purchasing logic
-        let current_income = (current_power_price * current_gen) - work_cost_per_hour;
-        let next_worker_cost = work_cost * (workers + 1);
-
-        // Only hire a worker if it's profitable
-        if (current_income > next_worker_cost) {
+        // More balanced purchasing logic for the simulation
+        if(workers < p_mechs){
             buyWorker(1);
+        } else {
+            buyPedalMachine();
         }
-
-        // Buy machines if affordable
-        buyPedalMachine();
 
         getCredits();
     }, 10); // Run at an accelerated speed

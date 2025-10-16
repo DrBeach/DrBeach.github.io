@@ -32,6 +32,11 @@
                 <p>kw/h: <span id="p_mech_eff">0</span></p>
                 <p>Cost: <span id="p_mach_cost">0</span></p>
                 <br />
+                <button type="button" onclick="buySolarPanel(1)">Buy Solar Panel</button>
+                <p>Solar Panels: <span id="solar_panels">0</span></p>
+                <p>kw/h: <span id="solar_panel_eff">0</span></p>
+                <p>Cost: <span id="solar_panel_cost">0</span></p>
+                <br />
         </div>
 
         <div id = "laboratory" style="display: None;">
@@ -44,6 +49,10 @@
                 <button type="button" onclick="upgradeManagerEfficiency()">Improve Manager Efficiency</button>
                 <p>Manager Efficiency: <span id="manager_efficiency">1</span>x</p>
                 <p>Cost: $<span id="manager_efficiency_cost">0</span></p>
+                <br />
+                <button type="button" onclick="upgradeSolarPanel()">Upgrade Solar Panels</button>
+                <p>Current kw/h: <span id="solar_panel_eff2">0</span></p>
+                <p>Upgrade cost: $<span id="solar_panel_upgrade_cost">0</span></p>
         </div>
 
         <div id = "management" style="display: None;">
