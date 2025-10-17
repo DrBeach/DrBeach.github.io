@@ -17,9 +17,9 @@ This is a simple idle game where you manage a power generation facility. The goa
 *   `interface.css`: This file styles the visual presentation of the game, including colors, fonts, and layout.
 *   `main.js`: This file contains all the game's logic, such as calculating power generation, handling purchases, and updating the display.
 
-## Revision History
+## Version History
 
-### Revision 0.4
+### Version 0.4
 
 *   **New Power Generators:** Added Wind Turbines and Nuclear Reactors, providing more diverse and powerful energy sources.
 *   **Dynamic Market Price:** The price of power now fluctuates, creating a more dynamic and strategic market.
@@ -48,19 +48,24 @@ The long-term vision for this game is to evolve it from a simple idle generator 
 
 ## Development Roadmap
 
-Here is a brief outline of the planned features for the next few revisions, aimed at building towards the future vision:
+Here is a brief outline of the planned features for the next few versions, aimed at building towards the future vision:
 
-*   **Revision 0.4 (In Progress):** Introduction to the Power Market
+*   **Version 0.4.1 (Current):** Stability and UX Overhaul
+    *   Fix critical bugs related to manager scaling and UI displays.
+    *   Refactor the manager and negotiation menus for better clarity.
+    *   Introduce the "Scientist" automation feature.
+
+*   **Version 0.5.0:** Power Market Introduction
     *   Introduce a dynamic market price for power that fluctuates.
     *   Add more advanced upgrades for generation and efficiency.
 
-*   **Revision 0.5:** Power Distribution
+*   **Version 0.6.0:** Power Distribution
     *   Unlock a new "City Map" area.
     *   Allow players to build power lines to different neighborhoods, each with unique power demands and rewards.
 
-*   **Revision 0.6:** Political Influence
+*   **Version 0.7.0:** Political Influence
     *   Introduce a "City Hall" area.
     *   Players can spend credits on lobbying or other activities to gain advantages in the market.
 
-*   **Revision 0.7:** AI Competitors
+*   **Version 0.8.0:** AI Competitors
     *   Introduce AI-controlled companies that compete with the player in the power market, making the political and economic game more challenging.

@@ -18,6 +18,7 @@ var managers = 0
 var manager_cost = 1000
 var manager_efficiency = 1
 var manager_efficiency_cost = 5000
+var manager_actions_per_tick = 1
 var manager_upgrade_solar_cost = 10000
 var manager_upgrade_wind_cost = 25000
 var manager_upgrade_nuclear_cost = 100000
@@ -56,7 +57,12 @@ var solar_panel_upgrade_chance = 0.1
 var wind_turbine_upgrade_chance = 0.1
 var nuclear_reactor_upgrade_chance = 0.1
 
-var areas = ["factory_floor", "laboratory", "management", "dashboard", "admin"]
+var scientists = 0
+var scientist_cost = 10000
+var research_points = 0
+var research_target = "p_mech_upgrade_chance"
+
+var areas = ["factory_floor", "laboratory", "management", "research", "market", "dashboard", "admin"]
 
 var creditHistory = []
 var powerHistory = []
@@ -64,6 +70,7 @@ var creditChart
 var powerChart
 //var space_max = 100;
 
+// Initializes the game state and UI elements when the page loads.
 function load(){
     document.getElementById("current_gen").innerHTML = current_gen
     document.getElementById("current_power_price").innerHTML = current_power_price
@@ -117,6 +124,11 @@ function load(){
     document.getElementById("nuclear_reactor_eff2").innerHTML = nuclear_reactor_eff;
     document.getElementById("nuclear_reactor_upgrade_cost").innerHTML = nuclear_reactor_upgrade_cost;
 
+    document.getElementById("scientists").innerHTML = scientists;
+    document.getElementById("scientist_cost").innerHTML = scientist_cost;
+    document.getElementById("research_points").innerHTML = research_points;
+    document.getElementById("research_target").innerHTML = research_target;
+
     var creditCtx = document.getElementById('creditChart').getContext('2d');
     creditChart = new Chart(creditCtx, {
         type: 'line',
@@ -146,6 +158,7 @@ function load(){
     });
 }
 
+// Calculates and updates the player's credits based on power generation and costs.
 function getCredits(){
     current_per_hour = (current_power_price * current_gen) - work_cost_per_hour
     current_per_hour = fixFloat(current_per_hour)
@@ -155,6 +168,7 @@ function getCredits(){
     document.getElementById("current_per_hour").innerHTML = current_per_hour;
 };
 
+// Shows the selected game area and hides the others.
 function show_area(area){
     for (i = 0; i < areas.length; i++){
         document.getElementById(areas[i]).style = "display: None;"
@@ -162,10 +176,12 @@ function show_area(area){
     document.getElementById(area).style = "display: Block;"
 }
 
+// A helper function to round a number to one decimal place.
 function fixFloat(number){
     return parseFloat(number.toFixed(1))
 }
 
+// Calculates the total power generation from all sources.
 function getCurrentGen(){
     //p_mech gen
     var max_utility = Math.max(p_mechs, workers) - (Math.max(p_mechs, workers) - Math.min(p_mechs, workers));
@@ -184,6 +200,7 @@ function getCurrentGen(){
     document.getElementById("current_gen").innerHTML = current_gen;
 }
 
+// Purchases a new worker.
 function buyWorker(number){
     workers = workers + number;
     getCurrentGen()
@@ -209,6 +226,7 @@ function buyPedalMachine(){
     document.getElementById("p_mach_cost").innerHTML = nextCost;
 };
 
+// Upgrades the efficiency of all pedal machines.
 function upgradePedalMachine(){
     // Price progression: 10% increase per level, based on current efficiency
     p_mech_prototype_cost = fixFloat(Math.pow(1.1,p_mech_level) * 10  * p_mech_eff * 2 * (60*1));
@@ -235,6 +253,7 @@ function upgradePedalMachine(){
     }
 }
 
+// Purchases a new solar panel.
 function buySolarPanel(){
     // Price progression: 20% increase per panel
     if(current_credits >= solar_panel_cost){
@@ -250,6 +269,7 @@ function buySolarPanel(){
     }
 }
 
+// Upgrades the efficiency of all solar panels.
 function upgradeSolarPanel(){
     // Price progression: 80% increase per upgrade
     if(current_credits >= solar_panel_upgrade_cost){
@@ -270,6 +290,7 @@ function upgradeSolarPanel(){
     }
 }
 
+// Purchases a new wind turbine.
 function buyWindTurbine(){
     // Price progression: 30% increase per turbine
     if(current_credits >= wind_turbine_cost){
@@ -285,6 +306,7 @@ function buyWindTurbine(){
     }
 }
 
+// Upgrades the efficiency of all wind turbines.
 function upgradeWindTurbine(){
     // Price progression: 90% increase per upgrade
     if(current_credits >= wind_turbine_upgrade_cost){
@@ -305,6 +327,7 @@ function upgradeWindTurbine(){
     }
 }
 
+// Purchases a new nuclear reactor.
 function buyNuclearReactor(){
     // Price progression: 40% increase per reactor
     if(current_credits >= nuclear_reactor_cost){
@@ -320,6 +343,7 @@ function buyNuclearReactor(){
     }
 }
 
+// Upgrades the efficiency of all nuclear reactors.
 function upgradeNuclearReactor(){
     // Price progression: 100% increase per upgrade
     if(current_credits >= nuclear_reactor_upgrade_cost){
@@ -340,6 +364,7 @@ function upgradeNuclearReactor(){
     }
 }
 
+// Purchases a new manager.
 function buyManager(){
     if(current_credits >= manager_cost){
         managers = managers + 1
@@ -351,10 +376,12 @@ function buyManager(){
 
         if(managers > 0){
             document.getElementById("manager_controls").style.display = "block";
+            document.getElementById("manager_upgrades").style.display = "block";
         }
     }
 }
 
+// Toggles the auto-buy feature for a specific resource.
 function toggleAutoBuy(resource){
     switch(resource){
         case 'worker':
@@ -375,6 +402,7 @@ function toggleAutoBuy(resource){
     }
 }
 
+// Upgrades the manager's capabilities to allow auto-buying of new resources.
 function upgradeManager(type){
     switch(type){
         case 'solar':
@@ -408,16 +436,18 @@ function upgradeManager(type){
     document.getElementById("current_credits").innerHTML = current_credits;
 }
 
-function upgradeManagerEfficiency(){
+// Increases the number of actions a manager can perform per tick.
+function upgradeManagerActions(){
     if(current_credits >= manager_efficiency_cost){
         current_credits = current_credits - manager_efficiency_cost
-        manager_efficiency = manager_efficiency + 1
+        manager_actions_per_tick = manager_actions_per_tick + 1
         manager_efficiency_cost = Math.floor(manager_efficiency_cost * 2)
-        document.getElementById("manager_efficiency").innerHTML = manager_efficiency;
+        document.getElementById("manager_efficiency").innerHTML = manager_actions_per_tick;
         document.getElementById("manager_efficiency_cost").innerHTML = manager_efficiency_cost;
     }
 }
 
+// Temporarily doubles the price of power.
 function negotiatePowerPrice(){
     if(negotiate_cooldown == 0){
         current_power_price = base_power_price * 2;
@@ -434,13 +464,65 @@ function negotiatePowerPrice(){
     }
 }
 
+// Adds 500 credits to the player's account for testing purposes.
 function cheat(){
     current_credits += 500;
     document.getElementById("current_credits").innerHTML = current_credits;
 }
 
+// Toggles the master manager automation on and off.
 function toggleManager(){
     manager_enabled = !manager_enabled;
+}
+
+function buyScientist(){
+    if(current_credits >= scientist_cost){
+        scientists++;
+        current_credits -= scientist_cost;
+        scientist_cost = Math.floor(scientist_cost * 1.5);
+
+        document.getElementById("scientists").innerHTML = scientists;
+        document.getElementById("scientist_cost").innerHTML = scientist_cost;
+        document.getElementById("current_credits").innerHTML = current_credits;
+    }
+}
+
+function updateResearch(){
+    research_points += scientists;
+
+    // This is a simple implementation. A more robust solution would be to have a data structure for upgrades.
+    if(research_target == "p_mech_upgrade_chance"){
+        p_mech_upgrade_chance = Math.min(1, p_mech_upgrade_chance + research_points / 10000);
+        document.getElementById("research_progress").innerHTML = (p_mech_upgrade_chance * 100).toFixed(2);
+        if(p_mech_upgrade_chance >= 1){
+            research_target = "solar_panel_upgrade_chance";
+            research_points = 0;
+        }
+    } else if (research_target == "solar_panel_upgrade_chance"){
+        solar_panel_upgrade_chance = Math.min(1, solar_panel_upgrade_chance + research_points / 10000);
+        document.getElementById("research_progress").innerHTML = (solar_panel_upgrade_chance * 100).toFixed(2);
+        if(solar_panel_upgrade_chance >= 1){
+            research_target = "wind_turbine_upgrade_chance";
+            research_points = 0;
+        }
+    } else if (research_target == "wind_turbine_upgrade_chance"){
+        wind_turbine_upgrade_chance = Math.min(1, wind_turbine_upgrade_chance + research_points / 10000);
+        document.getElementById("research_progress").innerHTML = (wind_turbine_upgrade_chance * 100).toFixed(2);
+        if(wind_turbine_upgrade_chance >= 1){
+            research_target = "nuclear_reactor_upgrade_chance";
+            research_points = 0;
+        }
+    } else if (research_target == "nuclear_reactor_upgrade_chance"){
+        nuclear_reactor_upgrade_chance = Math.min(1, nuclear_reactor_upgrade_chance + research_points / 10000);
+        document.getElementById("research_progress").innerHTML = (nuclear_reactor_upgrade_chance * 100).toFixed(2);
+    }
+
+    document.getElementById("research_points").innerHTML = research_points;
+    document.getElementById("research_target").innerHTML = research_target;
+    document.getElementById("p_mech_upgrade_chance").innerHTML = p_mech_upgrade_chance.toFixed(2);
+    document.getElementById("solar_panel_upgrade_chance").innerHTML = solar_panel_upgrade_chance.toFixed(2);
+    document.getElementById("wind_turbine_upgrade_chance").innerHTML = wind_turbine_upgrade_chance.toFixed(2);
+    document.getElementById("nuclear_reactor_upgrade_chance").innerHTML = nuclear_reactor_upgrade_chance.toFixed(2);
 }
 
 function updateMarketPrice(){
@@ -483,9 +565,10 @@ function updateChart(){
 window.setInterval(function(){
     if(managers > 0 && manager_enabled){
         document.getElementById("manager_status").innerHTML = "Active";
-        for(var i = 0; i < manager_efficiency; i++){
-            document.getElementById("manager_status").innerHTML = "Buying...";
-            if(autobuy_worker && workers < p_mechs){
+        for(var i = 0; i < managers; i++){
+            for(var j = 0; j < manager_actions_per_tick; j++){
+                document.getElementById("manager_status").innerHTML = "Buying...";
+                if(autobuy_worker && workers < p_mechs){
                 document.getElementById("manager_status").innerHTML = "Buying Worker";
                 buyWorker(1)
             }
@@ -520,6 +603,7 @@ window.setInterval(function(){
         document.getElementById("negotiate_timer").innerHTML = negotiate_timer;
     }
     updateMarketPrice();
+    updateResearch();
     getCredits()
     updateChart()
     document.getElementById("current_credits").innerHTML = current_credits;
@@ -563,37 +647,4 @@ function runSimulationTest(){
         getCredits();
         steps++;
     }, 10);
-}
-
-function resetGameStateForTest() {
-    current_gen = 0;
-    current_power_price = 2;
-    current_credits = 100;
-    work_cost_per_hour = 0;
-    workers = 0;
-    p_mechs = 0;
-    p_mech_eff = 0.5;
-    p_mech_level = 1;
-    managers = 0;
-    manager_cost = 1000;
-    manager_efficiency = 1;
-    manager_efficiency_cost = 5000;
-    manager_upgrade_solar_cost = 10000;
-    manager_upgrade_wind_cost = 25000;
-    manager_upgrade_nuclear_cost = 100000;
-    solar_panels = 0;
-    solar_panel_cost = 500;
-    solar_panel_eff = 2;
-    solar_panel_upgrade_cost = 1000;
-    wind_turbines = 0;
-    wind_turbine_cost = 2000;
-    wind_turbine_eff = 10;
-    wind_turbine_upgrade_cost = 5000;
-    nuclear_reactors = 0;
-    nuclear_reactor_cost = 10000;
-    nuclear_reactor_eff = 50;
-    nuclear_reactor_upgrade_cost = 25000;
-    negotiate_cooldown = 0;
-    negotiate_timer = 0;
-    base_power_price = 2;
 }
