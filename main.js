@@ -518,26 +518,27 @@ window.setInterval(function(){
             for(var j = 0; j < manager_actions_per_tick; j++){
                 document.getElementById("manager_status").innerHTML = "Buying...";
                 if(autobuy_worker && workers < p_mechs){
-                document.getElementById("manager_status").innerHTML = "Buying Worker";
-                buyWorker(1)
-            }
-            else if(autobuy_pedal_machine){
-                document.getElementById("manager_status").innerHTML = "Buying Pedal Machine";
-                buyPedalMachine()
-            }
-            else if(autobuy_solar_panel){
-                document.getElementById("manager_status").innerHTML = "Buying Solar Panel";
-                buySolarPanel()
-            }
-            else if(autobuy_wind_turbine){
-                document.getElementById("manager_status").innerHTML = "Buying Wind Turbine";
-                buyWindTurbine()
-            }
-            else if(autobuy_nuclear_reactor){
-                document.getElementById("manager_status").innerHTML = "Buying Nuclear Reactor";
-                buyNuclearReactor()
-            } else {
-                document.getElementById("manager_status").innerHTML = "Idle";
+                    document.getElementById("manager_status").innerHTML = "Buying Worker";
+                    buyWorker(1)
+                }
+                else if(autobuy_pedal_machine){
+                    document.getElementById("manager_status").innerHTML = "Buying Pedal Machine";
+                    buyPedalMachine()
+                }
+                else if(autobuy_solar_panel){
+                    document.getElementById("manager_status").innerHTML = "Buying Solar Panel";
+                    buySolarPanel()
+                }
+                else if(autobuy_wind_turbine){
+                    document.getElementById("manager_status").innerHTML = "Buying Wind Turbine";
+                    buyWindTurbine()
+                }
+                else if(autobuy_nuclear_reactor){
+                    document.getElementById("manager_status").innerHTML = "Buying Nuclear Reactor";
+                    buyNuclearReactor()
+                } else {
+                    document.getElementById("manager_status").innerHTML = "Idle";
+                }
             }
         }
     } else if(managers > 0){
