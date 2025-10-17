@@ -15,17 +15,6 @@
         <p>Current credits: $<span id="current_credits">0</span></p>
         <p>Negotiation Timer: <span id="negotiate_timer">0</span>s</p>
         <br>
-        <div id="manager_controls" style="display: none;">
-            <h2>Manager Controls</h2>
-            <label><input type="checkbox" id="manager_enabled" onchange="toggleManager()"> Manager Enabled</label>
-            <p>Status: <span id="manager_status">Idle</span></p>
-            <br>
-            <label><input type="checkbox" id="autobuy_worker" onchange="toggleAutoBuy('worker')"> Auto-buy Workers</label>
-            <label><input type="checkbox" id="autobuy_pedal_machine" onchange="toggleAutoBuy('pedal_machine')"> Auto-buy Pedal Machines</label>
-            <label><input type="checkbox" id="autobuy_solar_panel" onchange="toggleAutoBuy('solar_panel')"> Auto-buy Solar Panels</label>
-            <label><input type="checkbox" id="autobuy_wind_turbine" onchange="toggleAutoBuy('wind_turbine')"> Auto-buy Wind Turbines</label>
-            <label><input type="checkbox" id="autobuy_nuclear_reactor" onchange="toggleAutoBuy('nuclear_reactor')"> Auto-buy Nuclear Reactors</label>
-        </div>
         <h2>Avliable areas:</h2>
         <button type="button" onclick="show_area('factory_floor')">Factory floor</button>
         <button type="button" onclick="show_area('laboratory')">Laboratory</button>
@@ -45,21 +34,6 @@
                 <p>Pedal Machines: <span id="p_mechs">0</span></p>
                 <p>kw/h: <span id="p_mech_eff">0</span></p>
                 <p>Cost: <span id="p_mach_cost">0</span></p>
-                <br />
-                <button type="button" onclick="buySolarPanel(1)">Buy Solar Panel</button>
-                <p>Solar Panels: <span id="solar_panels">0</span></p>
-                <p>kw/h: <span id="solar_panel_eff">0</span></p>
-                <p>Cost: <span id="solar_panel_cost">0</span></p>
-                <br />
-                <button type="button" onclick="buyWindTurbine(1)">Buy Wind Turbine</button>
-                <p>Wind Turbines: <span id="wind_turbines">0</span></p>
-                <p>kw/h: <span id="wind_turbine_eff">0</span></p>
-                <p>Cost: <span id="wind_turbine_cost">0</span></p>
-                <br />
-                <button type="button" onclick="buyNuclearReactor(1)">Buy Nuclear Reactor</button>
-                <p>Nuclear Reactors: <span id="nuclear_reactors">0</span></p>
-                <p>kw/h: <span id="nuclear_reactor_eff">0</span></p>
-                <p>Cost: <span id="nuclear_reactor_cost">0</span></p>
                 <br />
         </div>
 
@@ -94,22 +68,6 @@
                 </div>
         </div>
 
-        <div id = "research" style="display: None;">
-                <br />
-                <button type="button" onclick="buyScientist(1)">Hire Scientist</button>
-                <p>Scientists: <span id="scientists">0</span></p>
-                <p>Cost: $<span id="scientist_cost">0</span></p>
-                <br />
-                <p>Research Points: <span id="research_points">0</span></p>
-                <p>Current Research Target: <span id="research_target"></span></p>
-                <p>Target Progress: <span id="research_progress">0</span>%</p>
-        </div>
-
-        <div id = "market" style="display: None;">
-                <br />
-                <button type="button" onclick="negotiatePowerPrice()">Negotiate Power Price</button>
-                <p>Cooldown: <span id="negotiate_cooldown">0</span>s</p>
-        </div>
 
         <div id = "dashboard" style="display: None;">
                 <br />
@@ -123,6 +81,5 @@
         </div>
         <p>End</p>
         <script type="text/javascript" src="main.js"></script>
-        <script type="text/javascript" src="tests.js"></script>
 </body>
 </html>
