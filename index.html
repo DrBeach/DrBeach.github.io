@@ -3,6 +3,8 @@
 <head>
         <link rel="stylesheet" type="text/css" href="interface.css" />
         <title>Idle game</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
+        <script type="text/javascript" src="main.js"></script>
 </head>
 <body onload="load();">
         <p>Welcome!!!!</p>
@@ -12,10 +14,16 @@
         <p>Current sale price is: $<span id="current_power_price">0</span> per kW/h</p>
         <p>Credits per hour: $<span id="current_per_hour">0</span></p>
         <p>Current credits: $<span id="current_credits">0</span></p>
+        <p>Negotiation Timer: <span id="negotiate_timer">0</span>s</p>
         <br>
         <h2>Avliable areas:</h2>
         <button type="button" onclick="show_area('factory_floor')">Factory floor</button>
         <button type="button" onclick="show_area('laboratory')">Laboratory</button>
+        <button type="button" onclick="show_area('management')">Management</button>
+        <button type="button" onclick="show_area('research')">Research</button>
+        <button type="button" onclick="show_area('market')">Market</button>
+        <button type="button" onclick="show_area('dashboard')">Dashboard</button>
+        <button type="button" onclick="show_area('admin')">Admin</button>
         <hr>
         <div id = "factory_floor" style="display: Block;">
                 <br />
@@ -35,7 +43,42 @@
                 <button type="button" onclick="upgradePedalMachine()">Prototype Pedal Machine Upgrade</button>
                 <p>Current kw/h: <span id="p_mech_eff2">0</span></p>
                 <p>Upgrade cost: $<span id="p_mech_prototype_cost">0</span></p>
-                <p>Upgrade chance: <span id="p_mech_upgrade_chance">0</span></p>                
+                <p>Upgrade chance: <span id="p_mech_upgrade_chance">0</span></p>
+                <br />
+                <button type="button" onclick="upgradeManagerActions()">Improve Manager Actions</button>
+                <p>Manager Actions: <span id="manager_efficiency">1</span>x</p>
+                <p>Cost: $<span id="manager_efficiency_cost">0</span></p>
+        </div>
+
+        <div id = "management" style="display: None;">
+                <br />
+                <button type="button" onclick="buyManager(1)">Hire Manager</button>
+                <p>Managers: <span id="managers">0</span></p>
+                <p>Cost: $<span id="manager_cost">0</span></p>
+                <br />
+                <div id="manager_controls" style="display: none;">
+                    <h2>Manager Controls</h2>
+                    <label><input type="checkbox" id="manager_enabled" onchange="toggleManager()"> Manager Enabled</label>
+                    <p>Status: <span id="manager_status">Idle</span></p>
+                    <br>
+                    <label><input type="checkbox" id="autobuy_worker" onchange="toggleAutoBuy('worker')"> Auto-buy Workers</label>
+                    <label><input type="checkbox" id="autobuy_pedal_machine" onchange="toggleAutoBuy('pedal_machine')"> Auto-buy Pedal Machines</label>
+                    <label><input type="checkbox" id="autobuy_solar_panel" onchange="toggleAutoBuy('solar_panel')" disabled> Auto-buy Solar Panels</label>
+                    <label><input type="checkbox" id="autobuy_wind_turbine" onchange="toggleAutoBuy('wind_turbine')" disabled> Auto-buy Wind Turbines</label>
+                    <label><input type="checkbox" id="autobuy_nuclear_reactor" onchange="toggleAutoBuy('nuclear_reactor')" disabled> Auto-buy Nuclear Reactors</label>
+                </div>
+        </div>
+
+
+        <div id = "dashboard" style="display: None;">
+                <br />
+                <h3>Credit History</h3>
+                <canvas id="creditChart" class="chart"></canvas>
+                <h3>Power History</h3>
+                <canvas id="powerChart" class="chart"></canvas>
+        </div>
+
+        <div id = "admin" style="display: None;">
         </div>
         <p>End</p>
         <script type="text/javascript" src="main.js"></script>
