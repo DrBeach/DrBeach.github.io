@@ -57,12 +57,7 @@ var solar_panel_upgrade_chance = 0.1
 var wind_turbine_upgrade_chance = 0.1
 var nuclear_reactor_upgrade_chance = 0.1
 
-var scientists = 0
-var scientist_cost = 10000
-var research_points = 0
-var research_target = "p_mech_upgrade_chance"
-
-var areas = ["factory_floor", "laboratory", "management", "research", "market", "dashboard", "admin"]
+var areas = ["factory_floor", "laboratory", "management", "dashboard", "admin"]
 
 var creditHistory = []
 var powerHistory = []
@@ -72,6 +67,7 @@ var powerChart
 
 // Initializes the game state and UI elements when the page loads.
 function load(){
+    console.log("Initial credits: " + current_credits);
     document.getElementById("current_gen").innerHTML = current_gen
     document.getElementById("current_power_price").innerHTML = current_power_price
     document.getElementById("current_credits").innerHTML = current_credits
@@ -170,10 +166,13 @@ function getCredits(){
 
 // Shows the selected game area and hides the others.
 function show_area(area){
+    alert("Showing area: " + area);
+    console.log("Showing area: " + area);
+    console.log(areas);
     for (i = 0; i < areas.length; i++){
-        document.getElementById(areas[i]).style = "display: None;"
+        document.getElementById(areas[i]).style.display = "none";
     }
-    document.getElementById(area).style = "display: Block;"
+    document.getElementById(area).style.display = "block";
 }
 
 // A helper function to round a number to one decimal place.
@@ -475,56 +474,6 @@ function toggleManager(){
     manager_enabled = !manager_enabled;
 }
 
-function buyScientist(){
-    if(current_credits >= scientist_cost){
-        scientists++;
-        current_credits -= scientist_cost;
-        scientist_cost = Math.floor(scientist_cost * 1.5);
-
-        document.getElementById("scientists").innerHTML = scientists;
-        document.getElementById("scientist_cost").innerHTML = scientist_cost;
-        document.getElementById("current_credits").innerHTML = current_credits;
-    }
-}
-
-function updateResearch(){
-    research_points += scientists;
-
-    // This is a simple implementation. A more robust solution would be to have a data structure for upgrades.
-    if(research_target == "p_mech_upgrade_chance"){
-        p_mech_upgrade_chance = Math.min(1, p_mech_upgrade_chance + research_points / 10000);
-        document.getElementById("research_progress").innerHTML = (p_mech_upgrade_chance * 100).toFixed(2);
-        if(p_mech_upgrade_chance >= 1){
-            research_target = "solar_panel_upgrade_chance";
-            research_points = 0;
-        }
-    } else if (research_target == "solar_panel_upgrade_chance"){
-        solar_panel_upgrade_chance = Math.min(1, solar_panel_upgrade_chance + research_points / 10000);
-        document.getElementById("research_progress").innerHTML = (solar_panel_upgrade_chance * 100).toFixed(2);
-        if(solar_panel_upgrade_chance >= 1){
-            research_target = "wind_turbine_upgrade_chance";
-            research_points = 0;
-        }
-    } else if (research_target == "wind_turbine_upgrade_chance"){
-        wind_turbine_upgrade_chance = Math.min(1, wind_turbine_upgrade_chance + research_points / 10000);
-        document.getElementById("research_progress").innerHTML = (wind_turbine_upgrade_chance * 100).toFixed(2);
-        if(wind_turbine_upgrade_chance >= 1){
-            research_target = "nuclear_reactor_upgrade_chance";
-            research_points = 0;
-        }
-    } else if (research_target == "nuclear_reactor_upgrade_chance"){
-        nuclear_reactor_upgrade_chance = Math.min(1, nuclear_reactor_upgrade_chance + research_points / 10000);
-        document.getElementById("research_progress").innerHTML = (nuclear_reactor_upgrade_chance * 100).toFixed(2);
-    }
-
-    document.getElementById("research_points").innerHTML = research_points;
-    document.getElementById("research_target").innerHTML = research_target;
-    document.getElementById("p_mech_upgrade_chance").innerHTML = p_mech_upgrade_chance.toFixed(2);
-    document.getElementById("solar_panel_upgrade_chance").innerHTML = solar_panel_upgrade_chance.toFixed(2);
-    document.getElementById("wind_turbine_upgrade_chance").innerHTML = wind_turbine_upgrade_chance.toFixed(2);
-    document.getElementById("nuclear_reactor_upgrade_chance").innerHTML = nuclear_reactor_upgrade_chance.toFixed(2);
-}
-
 function updateMarketPrice(){
     // Fluctuate the base power price by a small random amount
     let fluctuation = (Math.random() - 0.5) * 0.2; // -0.1 to +0.1
@@ -602,8 +551,6 @@ window.setInterval(function(){
         negotiate_timer = negotiate_timer - 1
         document.getElementById("negotiate_timer").innerHTML = negotiate_timer;
     }
-    updateMarketPrice();
-    updateResearch();
     getCredits()
     updateChart()
     document.getElementById("current_credits").innerHTML = current_credits;
