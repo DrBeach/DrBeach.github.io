@@ -14,27 +14,85 @@ var p_mech_level = 1
 var p_mech_prototype_cost = 0
 var p_mech_upgrade_chance = 0.1
 
-var areas = ["factory_floor", "laboratory"]
+var areas = ["factory_floor", "laboratory", "management", "dashboard", "admin"]
+
+var creditHistory = []
+var powerHistory = []
+var creditChart
+var powerChart
 //var space_max = 100;
 
 function load(){
-    document.getElementById("current_gen").innerHTML = current_gen
-    document.getElementById("current_power_price").innerHTML = current_power_price
-    document.getElementById("current_credits").innerHTML = current_credits
-    document.getElementById("current_per_hour").innerHTML = current_per_hour
-    document.getElementById("work_cost").innerHTML = work_cost
-    document.getElementById("workers").innerHTML = workers
-    document.getElementById("p_mechs").innerHTML = p_mechs
-    document.getElementById("p_mech_eff").innerHTML = p_mech_eff
-    document.getElementById("p_mech_eff2").innerHTML = p_mech_eff2
+    if (document.getElementById("current_gen")) {
+        document.getElementById("current_gen").innerHTML = current_gen
+    }
+    if (document.getElementById("current_power_price")) {
+        document.getElementById("current_power_price").innerHTML = current_power_price
+    }
+    if (document.getElementById("current_credits")) {
+        document.getElementById("current_credits").innerHTML = current_credits
+    }
+    if (document.getElementById("current_per_hour")) {
+        document.getElementById("current_per_hour").innerHTML = current_per_hour
+    }
+    if (document.getElementById("work_cost")) {
+        document.getElementById("work_cost").innerHTML = work_cost
+    }
+    if (document.getElementById("workers")) {
+        document.getElementById("workers").innerHTML = workers
+    }
+    if (document.getElementById("p_mechs")) {
+        document.getElementById("p_mechs").innerHTML = p_mechs
+    }
+    if (document.getElementById("p_mech_eff")) {
+        document.getElementById("p_mech_eff").innerHTML = p_mech_eff
+    }
+    if (document.getElementById("p_mech_eff2")) {
+        document.getElementById("p_mech_eff2").innerHTML = p_mech_eff2
+    }
 
     p_mech_prototype_cost = fixFloat(Math.pow(1.1,p_mech_level) * 10  * p_mech_eff * 2 * (60*1))
-    document.getElementById("p_mech_prototype_cost").innerHTML = p_mech_prototype_cost
-    document.getElementById("p_mech_upgrade_chance").innerHTML = p_mech_upgrade_chance
+    if (document.getElementById("p_mech_prototype_cost")) {
+        document.getElementById("p_mech_prototype_cost").innerHTML = p_mech_prototype_cost
+    }
+    if (document.getElementById("p_mech_upgrade_chance")) {
+        document.getElementById("p_mech_upgrade_chance").innerHTML = p_mech_upgrade_chance
+    }
     
     //fix
-    document.getElementById("p_mach_cost").innerHTML = Math.floor(init_p_mach_cost * Math.pow(1.1,p_mechs));
-    
+    if (document.getElementById("p_mach_cost")) {
+        document.getElementById("p_mach_cost").innerHTML = Math.floor(init_p_mach_cost * Math.pow(1.1,p_mechs));
+    }
+
+    if (document.getElementById('creditChart') && document.getElementById('powerChart')) {
+        var creditCtx = document.getElementById('creditChart').getContext('2d');
+        creditChart = new Chart(creditCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Credits',
+                    data: creditHistory,
+                    borderColor: 'gold',
+                    fill: false
+                }]
+            }
+        });
+
+        var powerCtx = document.getElementById('powerChart').getContext('2d');
+        powerChart = new Chart(powerCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Power',
+                    data: powerHistory,
+                    borderColor: 'cyan',
+                    fill: false
+                }]
+            }
+        });
+    }
 }
 
 function getCredits(){
@@ -104,8 +162,41 @@ function upgradePedalMachine(){
     }
 }
 
+// Adds 500 credits to the player's account for testing purposes.
+function cheat(){
+    current_credits += 500;
+    if (document.getElementById("current_credits")) {
+        document.getElementById("current_credits").innerHTML = current_credits;
+    }
+}
+
+function updateChart(){
+    if (creditChart) {
+        creditHistory.push(current_credits);
+        creditChart.data.labels.push("");
+        if(creditHistory.length > 20){
+            creditHistory.shift();
+            creditChart.data.labels.shift();
+        }
+        creditChart.update();
+    }
+
+    if (powerChart) {
+        powerHistory.push(current_gen);
+        powerChart.data.labels.push("");
+        if(powerHistory.length > 20){
+            powerHistory.shift();
+            powerChart.data.labels.shift();
+        }
+        powerChart.update();
+    }
+}
+
 window.setInterval(function(){
     //buyWorker(p_mechs)
     getCredits()
-    document.getElementById("current_credits").innerHTML = current_credits;
+    if (document.getElementById("current_credits")) {
+        document.getElementById("current_credits").innerHTML = current_credits;
+    }
+    updateChart();
 }, 1000);
