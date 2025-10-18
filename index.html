@@ -3,6 +3,7 @@
 <head>
         <link rel="stylesheet" type="text/css" href="interface.css" />
         <title>Idle game</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
 </head>
 <body onload="load();">
         <p>Welcome!!!!</p>
@@ -16,8 +17,10 @@
         <h2>Avliable areas:</h2>
         <button type="button" onclick="show_area('factory_floor')">Factory floor</button>
         <button type="button" onclick="show_area('laboratory')">Laboratory</button>
+        <button type="button" onclick="show_area('dashboard')">Dashboard</button>
+        <button type="button" onclick="show_area('admin')">Admin</button>
         <hr>
-        <div id = "factory_floor" style="display: Block;">
+        <div id="factory_floor" style="display: Block;">
                 <br />
                 <button type="button" onclick="buyWorker(1)">Hire worker</button>
                 <p>Workers: <span id="workers">0</span></p>
@@ -28,6 +31,11 @@
                 <p>kw/h: <span id="p_mech_eff">0</span></p>
                 <p>Cost: <span id="p_mach_cost">0</span></p>
                 <br />
+                <button type="button" onclick="buySolarPanel()">Buy Solar Panel</button>
+                <p>Solar Panels: <span id="solar_panels">0</span></p>
+                <p>kw/h: <span id="solar_panel_eff">0</span></p>
+                <p>Cost: <span id="solar_panel_cost">0</span></p>
+                <br />
         </div>
 
         <div id = "laboratory" style="display: None;">
@@ -36,6 +44,22 @@
                 <p>Current kw/h: <span id="p_mech_eff2">0</span></p>
                 <p>Upgrade cost: $<span id="p_mech_prototype_cost">0</span></p>
                 <p>Upgrade chance: <span id="p_mech_upgrade_chance">0</span></p>                
+        </div>
+
+        <div id="management" style="display: None;">
+        </div>
+
+        <div id="dashboard" style="display: None;">
+            <br />
+            <h3>Credit History</h3>
+            <canvas id="creditChart" class="chart"></canvas>
+            <h3>Power History</h3>
+            <canvas id="powerChart" class="chart"></canvas>
+        </div>
+
+        <div id="admin" style="display: None;">
+            <br />
+            <button type="button" onclick="cheat()">+$500</button>
         </div>
         <p>End</p>
         <script type="text/javascript" src="main.js"></script>
