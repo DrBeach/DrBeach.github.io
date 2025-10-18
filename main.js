@@ -14,6 +14,14 @@ var p_mech_level = 1
 var p_mech_prototype_cost = 0
 var p_mech_upgrade_chance = 0.1
 
+var negotiate_cooldown = 0;
+var solar_panels = 0;
+var solar_panel_eff = 2;
+var wind_turbines = 0;
+var wind_turbine_eff = 10;
+var nuclear_reactors = 0;
+var nuclear_reactor_eff = 50;
+
 var areas = ["factory_floor", "laboratory", "management", "dashboard", "admin"]
 
 var creditHistory = []
@@ -223,6 +231,36 @@ function updateChart(){
     }
 }
 
+// Adds 500 credits to the player's account for testing purposes.
+function cheat(){
+    current_credits += 500;
+    if (document.getElementById("current_credits")) {
+        document.getElementById("current_credits").innerHTML = current_credits;
+    }
+}
+
+function updateChart(){
+    if (creditChart) {
+        creditHistory.push(current_credits);
+        creditChart.data.labels.push("");
+        if(creditHistory.length > 20){
+            creditHistory.shift();
+            creditChart.data.labels.shift();
+        }
+        creditChart.update();
+    }
+
+    if (powerChart) {
+        powerHistory.push(current_gen);
+        powerChart.data.labels.push("");
+        if(powerHistory.length > 20){
+            powerHistory.shift();
+            powerChart.data.labels.shift();
+        }
+        powerChart.update();
+    }
+}
+
 window.setInterval(function(){
     if(managers > 0 && manager_enabled){
         document.getElementById("manager_status").innerHTML = "Active";
@@ -267,6 +305,12 @@ window.setInterval(function(){
     getCredits()
     if (document.getElementById("current_credits")) {
         document.getElementById("current_credits").innerHTML = current_credits;
+    }
+    if(negotiate_cooldown > 0){
+        negotiate_cooldown = negotiate_cooldown - 1
+        if (document.getElementById("negotiate_cooldown")) {
+            document.getElementById("negotiate_cooldown").innerHTML = negotiate_cooldown;
+        }
     }
     updateChart();
 }, 1000);
