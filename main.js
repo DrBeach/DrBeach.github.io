@@ -91,9 +91,9 @@ function load(){
     document.getElementById("negotiate_cooldown").innerHTML = negotiate_cooldown;
     document.getElementById("negotiate_timer").innerHTML = negotiate_timer;
 
-    document.getElementById("manager_upgrade_solar_cost").innerHTML = manager_upgrade_solar_cost;
-    document.getElementById("manager_upgrade_wind_cost").innerHTML = manager_upgrade_wind_cost;
-    document.getElementById("manager_upgrade_nuclear_cost").innerHTML = manager_upgrade_nuclear_cost;
+    // document.getElementById("manager_upgrade_solar_cost").innerHTML = manager_upgrade_solar_cost;
+    // document.getElementById("manager_upgrade_wind_cost").innerHTML = manager_upgrade_wind_cost;
+    // document.getElementById("manager_upgrade_nuclear_cost").innerHTML = manager_upgrade_nuclear_cost;
 
     // Set the initial state of the checkboxes
     document.getElementById("autobuy_solar_panel").disabled = !manager_autobuy_unlocked.solar;
@@ -101,29 +101,29 @@ function load(){
     document.getElementById("autobuy_nuclear_reactor").disabled = !manager_autobuy_unlocked.nuclear;
 
 
-    document.getElementById("solar_panels").innerHTML = solar_panels;
-    document.getElementById("solar_panel_cost").innerHTML = solar_panel_cost;
-    document.getElementById("solar_panel_eff").innerHTML = solar_panel_eff;
-    document.getElementById("solar_panel_eff2").innerHTML = solar_panel_eff;
-    document.getElementById("solar_panel_upgrade_cost").innerHTML = solar_panel_upgrade_cost;
-    document.getElementById("solar_panel_upgrade_chance").innerHTML = solar_panel_upgrade_chance;
+    // document.getElementById("solar_panels").innerHTML = solar_panels;
+    // document.getElementById("solar_panel_cost").innerHTML = solar_panel_cost;
+    // document.getElementById("solar_panel_eff").innerHTML = solar_panel_eff;
+    // document.getElementById("solar_panel_eff2").innerHTML = solar_panel_eff;
+    // document.getElementById("solar_panel_upgrade_cost").innerHTML = solar_panel_upgrade_cost;
+    // document.getElementById("solar_panel_upgrade_chance").innerHTML = solar_panel_upgrade_chance;
 
-    document.getElementById("wind_turbines").innerHTML = wind_turbines;
-    document.getElementById("wind_turbine_cost").innerHTML = wind_turbine_cost;
-    document.getElementById("wind_turbine_eff").innerHTML = wind_turbine_eff;
-    document.getElementById("wind_turbine_eff2").innerHTML = wind_turbine_eff;
-    document.getElementById("wind_turbine_upgrade_cost").innerHTML = wind_turbine_upgrade_cost;
+    // document.getElementById("wind_turbines").innerHTML = wind_turbines;
+    // document.getElementById("wind_turbine_cost").innerHTML = wind_turbine_cost;
+    // document.getElementById("wind_turbine_eff").innerHTML = wind_turbine_eff;
+    // document.getElementById("wind_turbine_eff2").innerHTML = wind_turbine_eff;
+    // document.getElementById("wind_turbine_upgrade_cost").innerHTML = wind_turbine_upgrade_cost;
 
-    document.getElementById("nuclear_reactors").innerHTML = nuclear_reactors;
-    document.getElementById("nuclear_reactor_cost").innerHTML = nuclear_reactor_cost;
-    document.getElementById("nuclear_reactor_eff").innerHTML = nuclear_reactor_eff;
-    document.getElementById("nuclear_reactor_eff2").innerHTML = nuclear_reactor_eff;
-    document.getElementById("nuclear_reactor_upgrade_cost").innerHTML = nuclear_reactor_upgrade_cost;
+    // document.getElementById("nuclear_reactors").innerHTML = nuclear_reactors;
+    // document.getElementById("nuclear_reactor_cost").innerHTML = nuclear_reactor_cost;
+    // document.getElementById("nuclear_reactor_eff").innerHTML = nuclear_reactor_eff;
+    // document.getElementById("nuclear_reactor_eff2").innerHTML = nuclear_reactor_eff;
+    // document.getElementById("nuclear_reactor_upgrade_cost").innerHTML = nuclear_reactor_upgrade_cost;
 
-    document.getElementById("scientists").innerHTML = scientists;
-    document.getElementById("scientist_cost").innerHTML = scientist_cost;
-    document.getElementById("research_points").innerHTML = research_points;
-    document.getElementById("research_target").innerHTML = research_target;
+    // document.getElementById("scientists").innerHTML = scientists;
+    // document.getElementById("scientist_cost").innerHTML = scientist_cost;
+    // document.getElementById("research_points").innerHTML = research_points;
+    // document.getElementById("research_target").innerHTML = research_target;
 
     var creditCtx = document.getElementById('creditChart').getContext('2d');
     creditChart = new Chart(creditCtx, {
@@ -166,7 +166,6 @@ function getCredits(){
 
 // Shows the selected game area and hides the others.
 function show_area(area){
-    alert("Showing area: " + area);
     console.log("Showing area: " + area);
     console.log(areas);
     for (i = 0; i < areas.length; i++){
