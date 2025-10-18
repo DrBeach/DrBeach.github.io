@@ -16,6 +16,7 @@ var p_mech_upgrade_chance = 0.1
 
 var negotiate_cooldown = 0;
 var solar_panels = 0;
+var solar_panel_cost = 500;
 var solar_panel_eff = 2;
 var wind_turbines = 0;
 var wind_turbine_eff = 10;
@@ -58,6 +59,15 @@ function load(){
     }
     if (document.getElementById("p_mech_eff2")) {
         document.getElementById("p_mech_eff2").innerHTML = p_mech_eff2
+    }
+    if (document.getElementById("solar_panels")) {
+        document.getElementById("solar_panels").innerHTML = solar_panels;
+    }
+    if (document.getElementById("solar_panel_cost")) {
+        document.getElementById("solar_panel_cost").innerHTML = solar_panel_cost;
+    }
+    if (document.getElementById("solar_panel_eff")) {
+        document.getElementById("solar_panel_eff").innerHTML = solar_panel_eff;
     }
 
     p_mech_prototype_cost = fixFloat(Math.pow(1.1,p_mech_level) * 10  * p_mech_eff * 2 * (60*1))
@@ -228,6 +238,52 @@ function updateChart(){
             powerChart.data.labels.shift();
         }
         powerChart.update();
+    }
+}
+
+// Adds 500 credits to the player's account for testing purposes.
+function cheat(){
+    current_credits += 500;
+    if (document.getElementById("current_credits")) {
+        document.getElementById("current_credits").innerHTML = current_credits;
+    }
+}
+
+function updateChart(){
+    if (creditChart) {
+        creditHistory.push(current_credits);
+        creditChart.data.labels.push("");
+        if(creditHistory.length > 20){
+            creditHistory.shift();
+            creditChart.data.labels.shift();
+        }
+        creditChart.update();
+    }
+
+    if (powerChart) {
+        powerHistory.push(current_gen);
+        powerChart.data.labels.push("");
+        if(powerHistory.length > 20){
+            powerHistory.shift();
+            powerChart.data.labels.shift();
+        }
+        powerChart.update();
+    }
+}
+
+// Purchases a new solar panel.
+function buySolarPanel(){
+    // Price progression: 20% increase per panel
+    if(current_credits >= solar_panel_cost){
+        solar_panels++;
+        current_credits -= solar_panel_cost;
+        solar_panel_cost = Math.floor(solar_panel_cost * 1.2);
+
+        getCurrentGen();
+
+        document.getElementById("solar_panels").innerHTML = solar_panels;
+        document.getElementById("solar_panel_cost").innerHTML = solar_panel_cost;
+        document.getElementById("current_credits").innerHTML = current_credits;
     }
 }
 
