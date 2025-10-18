@@ -67,6 +67,7 @@ var powerChart
 
 // Initializes the game state and UI elements when the page loads.
 function load(){
+    console.log("Initial credits: " + current_credits);
     document.getElementById("current_gen").innerHTML = current_gen
     document.getElementById("current_power_price").innerHTML = current_power_price
     document.getElementById("current_credits").innerHTML = current_credits
