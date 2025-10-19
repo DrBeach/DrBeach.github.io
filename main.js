@@ -342,6 +342,22 @@ function updateChart(){
 }
 
 window.setInterval(function(){
+    // Price fluctuation: Adjust price by a random amount between -0.1 and 0.1
+    var price_change = (Math.random() * 0.2) - 0.1;
+    current_power_price += price_change;
+
+    // Clamp the price to a reasonable range (e.g., 0.5 to 5)
+    if(current_power_price < 0.5){
+        current_power_price = 0.5;
+    } else if(current_power_price > 5){
+        current_power_price = 5;
+    }
+    current_power_price = fixFloat(current_power_price);
+
+    if (document.getElementById("current_power_price")) {
+        document.getElementById("current_power_price").innerHTML = current_power_price;
+    }
+
     //buyWorker(p_mechs)
     getCredits()
     if (document.getElementById("current_credits")) {
@@ -360,30 +376,56 @@ window.setInterval(function(){
         }
         for(var i = 0; i < managers; i++){
             for(var j = 0; j < manager_actions_per_tick; j++){
-                if (document.getElementById("manager_status")) {
-                    document.getElementById("manager_status").innerHTML = "Buying...";
-                }
+                // Manager AI: Smarter purchasing decisions
+
+                // 1. Prioritize hiring workers until pedal machines are fully staffed.
                 if(autobuy_worker && workers < p_mechs){
                     if (document.getElementById("manager_status")) {
                         document.getElementById("manager_status").innerHTML = "Buying Worker";
                     }
-                    buyWorker(1)
+                    buyWorker(1);
+                    continue; // Skip to the next manager action
                 }
-                else if(autobuy_pedal_machine){
-                    if (document.getElementById("manager_status")) {
-                        document.getElementById("manager_status").innerHTML = "Buying Pedal Machine";
+
+                // 2. If workers are staffed, find the most cost-effective generator to buy.
+                var best_buy = { name: "none", efficiency: 0 };
+                var p_mech_current_cost = Math.floor(init_p_mach_cost * Math.pow(1.1, p_mechs));
+
+                // A. Calculate efficiency for Pedal Machines (kW/h per credit)
+                if (autobuy_pedal_machine && current_credits >= p_mech_current_cost) {
+                    var p_mech_kwh_per_dollar = p_mech_eff / p_mech_current_cost;
+                    if (p_mech_kwh_per_dollar > best_buy.efficiency) {
+                        best_buy = { name: "pedal_machine", efficiency: p_mech_kwh_per_dollar };
                     }
-                    buyPedalMachine()
                 }
-                else if(autobuy_solar_panel){
-                    if (document.getElementById("manager_status")) {
-                        document.getElementById("manager_status").innerHTML = "Buying Solar Panel";
+
+                // B. Calculate efficiency for Solar Panels (kW/h per credit)
+                if (autobuy_solar_panel && current_credits >= solar_panel_cost) {
+                    var solar_panel_kwh_per_dollar = solar_panel_eff / solar_panel_cost;
+                    if (solar_panel_kwh_per_dollar > best_buy.efficiency) {
+                        best_buy = { name: "solar_panel", efficiency: solar_panel_kwh_per_dollar };
                     }
-                    buySolarPanel()
-                } else {
-                    if (document.getElementById("manager_status")) {
-                        document.getElementById("manager_status").innerHTML = "Idle";
-                    }
+                }
+
+                // 3. Execute the best purchase decision.
+                switch (best_buy.name) {
+                    case "pedal_machine":
+                        if (document.getElementById("manager_status")) {
+                            document.getElementById("manager_status").innerHTML = "Buying Pedal Machine";
+                        }
+                        buyPedalMachine();
+                        break;
+                    case "solar_panel":
+                        if (document.getElementById("manager_status")) {
+                            document.getElementById("manager_status").innerHTML = "Buying Solar Panel";
+                        }
+                        buySolarPanel();
+                        break;
+                    default:
+                        if (document.getElementById("manager_status")) {
+                            document.getElementById("manager_status").innerHTML = "Idle";
+                        }
+                        break;
                 }
             }
         }
