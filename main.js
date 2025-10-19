@@ -19,7 +19,12 @@ var manager_cost = 1000;
 var manager_actions_per_tick = 1;
 var autobuy_worker = false;
 var autobuy_pedal_machine = false;
+var autobuy_solar_panel = false;
 var manager_enabled = false;
+var manager_upgrade_solar_cost = 10000;
+var manager_autobuy_unlocked = {
+    solar: false
+};
 
 var negotiate_cooldown = 0;
 var solar_panels = 0;
@@ -253,6 +258,22 @@ function upgradeSolarPanel(){
     }
 }
 
+// Upgrades the manager's capabilities to allow auto-buying of new resources.
+function upgradeManager(type){
+    switch(type){
+        case 'solar':
+            if(current_credits >= manager_upgrade_solar_cost){
+                current_credits -= manager_upgrade_solar_cost;
+                manager_autobuy_unlocked.solar = true;
+                document.getElementById("autobuy_solar_panel").disabled = false;
+                manager_upgrade_solar_cost = 0; // One-time purchase
+                document.getElementById("manager_upgrade_solar_cost").innerHTML = "Unlocked";
+            }
+            break;
+    }
+    document.getElementById("current_credits").innerHTML = current_credits;
+}
+
 // Purchases a new manager.
 function buyManager(){
     if(current_credits >= manager_cost){
@@ -265,6 +286,7 @@ function buyManager(){
 
         if(managers > 0){
             document.getElementById("manager_controls").style.display = "block";
+            document.getElementById("manager_upgrades").style.display = "block";
         }
     }
 }
@@ -277,6 +299,9 @@ function toggleAutoBuy(resource){
             break;
         case 'pedal_machine':
             autobuy_pedal_machine = !autobuy_pedal_machine;
+            break;
+        case 'solar_panel':
+            autobuy_solar_panel = !autobuy_solar_panel;
             break;
     }
 }
@@ -349,6 +374,12 @@ window.setInterval(function(){
                         document.getElementById("manager_status").innerHTML = "Buying Pedal Machine";
                     }
                     buyPedalMachine()
+                }
+                else if(autobuy_solar_panel){
+                    if (document.getElementById("manager_status")) {
+                        document.getElementById("manager_status").innerHTML = "Buying Solar Panel";
+                    }
+                    buySolarPanel()
                 } else {
                     if (document.getElementById("manager_status")) {
                         document.getElementById("manager_status").innerHTML = "Idle";

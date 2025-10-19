@@ -65,6 +65,12 @@
                 <br>
                 <label><input type="checkbox" id="autobuy_worker" onchange="toggleAutoBuy('worker')"> Auto-buy Workers</label>
                 <label><input type="checkbox" id="autobuy_pedal_machine" onchange="toggleAutoBuy('pedal_machine')"> Auto-buy Pedal Machines</label>
+                <label><input type="checkbox" id="autobuy_solar_panel" onchange="toggleAutoBuy('solar_panel')" disabled> Auto-buy Solar Panels</label>
+            </div>
+            <div id="manager_upgrades" style="display: none;">
+                <h2>Manager Upgrades</h2>
+                <button type="button" onclick="upgradeManager('solar')">Unlock Auto-buy Solar</button>
+                <p>Cost: $<span id="manager_upgrade_solar_cost">10000</span></p>
             </div>
         </div>
 
