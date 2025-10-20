@@ -111,7 +111,24 @@ function load(){
         document.getElementById("p_mach_cost").innerHTML = Math.floor(init_p_mach_cost * Math.pow(1.1,p_mechs));
     }
 
-    if (document.getElementById('creditChart') && document.getElementById('powerChart')) {
+}
+
+function getCredits(){
+    current_per_hour = (current_power_price * current_gen) - work_cost_per_hour
+    current_per_hour = fixFloat(current_per_hour)
+    current_credits = current_credits + current_per_hour
+    current_credits = fixFloat(current_credits)
+    document.getElementById("current_credits").innerHTML = current_credits
+    document.getElementById("current_per_hour").innerHTML = current_per_hour;
+};
+
+function show_area(area){
+    for (i = 0; i < areas.length; i++){
+        document.getElementById(areas[i]).style = "display: None;"
+    }
+    document.getElementById(area).style = "display: Block;"
+
+    if(area === 'dashboard' && !creditChart && !powerChart){
         var creditCtx = document.getElementById('creditChart').getContext('2d');
         creditChart = new Chart(creditCtx, {
             type: 'line',
@@ -178,22 +195,6 @@ function load(){
             }
         });
     }
-}
-
-function getCredits(){
-    current_per_hour = (current_power_price * current_gen) - work_cost_per_hour
-    current_per_hour = fixFloat(current_per_hour)
-    current_credits = current_credits + current_per_hour
-    current_credits = fixFloat(current_credits)
-    document.getElementById("current_credits").innerHTML = current_credits
-    document.getElementById("current_per_hour").innerHTML = current_per_hour;
-};
-
-function show_area(area){
-    for (i = 0; i < areas.length; i++){
-        document.getElementById(areas[i]).style = "display: None;"
-    }
-    document.getElementById(area).style = "display: Block;"
 }
 
 function fixFloat(number){
@@ -361,7 +362,7 @@ function updateChart(){
     if (creditChart) {
         creditHistory.push(current_credits);
         creditChart.data.labels.push("");
-        if(creditHistory.length > 20){
+        if(creditHistory.length > 100){
             creditHistory.shift();
             creditChart.data.labels.shift();
         }
@@ -371,7 +372,7 @@ function updateChart(){
     if (powerChart) {
         powerHistory.push(current_gen);
         powerChart.data.labels.push("");
-        if(powerHistory.length > 20){
+        if(powerHistory.length > 100){
             powerHistory.shift();
             powerChart.data.labels.shift();
         }
