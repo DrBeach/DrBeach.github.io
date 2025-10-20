@@ -129,72 +129,82 @@ function show_area(area){
     document.getElementById(area).style = "display: Block;"
 
     if(area === 'dashboard' && !creditChart && !powerChart){
-        var creditCtx = document.getElementById('creditChart').getContext('2d');
-        creditChart = new Chart(creditCtx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: 'Credits',
-                    data: creditHistory,
-                    borderColor: 'gold',
-                    fill: {
-                        target: 'origin',
-                        above: 'rgba(255, 215, 0, 0.2)',
-                    },
-                    tension: 0.4
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        display: false
-                    },
-                    y: {
-                        display: false
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
-            }
-        });
-
-        var powerCtx = document.getElementById('powerChart').getContext('2d');
-        powerChart = new Chart(powerCtx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: 'Power',
-                    data: powerHistory,
-                    borderColor: 'cyan',
-                    fill: {
-                        target: 'origin',
-                        above: 'rgba(0, 255, 255, 0.2)',
-                    },
-                    tension: 0.4
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        display: false
-                    },
-                    y: {
-                        display: false
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
-            }
-        });
+        initCharts();
     }
+}
+
+function initCharts(){
+    // Pre-populate history with starting values for a stable initial graph
+    for (let i = 0; i < 100; i++) {
+        creditHistory.push(current_credits);
+        powerHistory.push(current_gen);
+    }
+
+    var creditCtx = document.getElementById('creditChart').getContext('2d');
+    creditChart = new Chart(creditCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Credits',
+                data: creditHistory,
+                borderColor: 'gold',
+                fill: {
+                    target: 'origin',
+                    above: 'rgba(255, 215, 0, 0.2)',
+                },
+                tension: 0.4
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    display: false
+                },
+                y: {
+                    display: false
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    var powerCtx = document.getElementById('powerChart').getContext('2d');
+    powerChart = new Chart(powerCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Power',
+                data: powerHistory,
+                borderColor: 'cyan',
+                fill: {
+                    target: 'origin',
+                    above: 'rgba(0, 255, 255, 0.2)',
+                },
+                tension: 0.4
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    display: false
+                },
+                y: {
+                    display: false
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
 }
 
 function fixFloat(number){
