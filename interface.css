@@ -12,3 +12,8 @@ body {
     font-size: 16px;
     color: #fe7f2d;
   }
+
+.chart {
+    width: 400px !important;
+    height: 200px !important;
+}
