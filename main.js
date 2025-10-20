@@ -144,7 +144,7 @@ function initCharts(){
     creditChart = new Chart(creditCtx, {
         type: 'line',
         data: {
-            labels: [],
+            labels: Array(100).fill(""),
             datasets: [{
                 label: 'Credits',
                 data: creditHistory,
@@ -177,7 +177,7 @@ function initCharts(){
     powerChart = new Chart(powerCtx, {
         type: 'line',
         data: {
-            labels: [],
+            labels: Array(100).fill(""),
             datasets: [{
                 label: 'Power',
                 data: powerHistory,
