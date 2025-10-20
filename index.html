@@ -6,7 +6,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
 </head>
 <body onload="load();">
-        <p>Welcome!!!!</p>
+        <p>Welcome!!!! <span id="version"></span></p>
         <br />
         <h2>Power Stats:</h2>
         <p>Current power generation is: <span id="current_gen">0</span> kW/h</p>
@@ -72,6 +72,9 @@
                 <button type="button" onclick="upgradeManager('solar')">Unlock Auto-buy Solar</button>
                 <p>Cost: $<span id="manager_upgrade_solar_cost">10000</span></p>
             </div>
+            <br />
+            <button type="button" onclick="negotiatePowerPrice()" id="negotiate_button">Negotiate Power Price</button>
+            <p>Cooldown: <span id="negotiate_cooldown">0</span></p>
         </div>
 
         <div id="dashboard" style="display: None;">

@@ -1,3 +1,5 @@
+var version = "0.1.1"
+var price_multiplier = 1
 var current_gen = 0
 var current_power_price = 2
 var current_credits = 500
@@ -44,6 +46,9 @@ var powerChart
 //var space_max = 100;
 
 function load(){
+    if (document.getElementById("version")) {
+        document.getElementById("version").innerHTML = version
+    }
     if (document.getElementById("current_gen")) {
         document.getElementById("current_gen").innerHTML = current_gen
     }
@@ -112,7 +117,7 @@ function load(){
 }
 
 function getCredits(){
-    current_per_hour = (current_power_price * current_gen) - work_cost_per_hour
+    current_per_hour = (current_power_price * price_multiplier * current_gen) - work_cost_per_hour
     current_per_hour = fixFloat(current_per_hour)
     current_credits = current_credits + current_per_hour
     current_credits = fixFloat(current_credits)
@@ -263,6 +268,17 @@ function upgradePedalMachine(){
     }
 }
 
+function negotiatePowerPrice(){
+    if(negotiate_cooldown === 0){
+        price_multiplier = 2;
+        negotiate_cooldown = 60;
+        document.getElementById("negotiate_button").disabled = true;
+        setTimeout(function(){
+            price_multiplier = 1;
+        }, 10000);
+    }
+}
+
 // Purchases a new solar panel.
 function buySolarPanel(){
     // Price progression: 20% increase per panel
@@ -408,6 +424,9 @@ window.setInterval(function(){
         negotiate_cooldown = negotiate_cooldown - 1
         if (document.getElementById("negotiate_cooldown")) {
             document.getElementById("negotiate_cooldown").innerHTML = negotiate_cooldown;
+        }
+        if(negotiate_cooldown === 0){
+            document.getElementById("negotiate_button").disabled = false;
         }
     }
 
