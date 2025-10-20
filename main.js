@@ -1,6 +1,6 @@
 var current_gen = 0
 var current_power_price = 2
-var current_credits = 100
+var current_credits = 500
 var current_per_hour = 0
 var work_cost = 0.1
 var work_cost_per_hour = 0
@@ -121,8 +121,27 @@ function load(){
                     label: 'Credits',
                     data: creditHistory,
                     borderColor: 'gold',
-                    fill: false
+                    fill: {
+                        target: 'origin',
+                        above: 'rgba(255, 215, 0, 0.2)',
+                    },
+                    tension: 0.4
                 }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        display: false
+                    },
+                    y: {
+                        display: false
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
             }
         });
 
@@ -135,8 +154,27 @@ function load(){
                     label: 'Power',
                     data: powerHistory,
                     borderColor: 'cyan',
-                    fill: false
+                    fill: {
+                        target: 'origin',
+                        above: 'rgba(0, 255, 255, 0.2)',
+                    },
+                    tension: 0.4
                 }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        display: false
+                    },
+                    y: {
+                        display: false
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
             }
         });
     }
@@ -436,4 +474,4 @@ window.setInterval(function(){
     }
 
     updateChart();
-}, 1000);
+}, 200);
