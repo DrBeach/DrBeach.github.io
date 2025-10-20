@@ -39,8 +39,6 @@ var nuclear_reactor_eff = 50;
 
 var areas = ["factory_floor", "laboratory", "management", "dashboard", "admin"]
 
-var creditHistory = []
-var powerHistory = []
 var creditChart
 var powerChart
 //var space_max = 100;
@@ -134,12 +132,6 @@ function show_area(area){
 }
 
 function initCharts(){
-    // Pre-populate history with starting values for a stable initial graph
-    for (let i = 0; i < 100; i++) {
-        creditHistory.push(current_credits);
-        powerHistory.push(current_gen);
-    }
-
     var creditCtx = document.getElementById('creditChart').getContext('2d');
     creditChart = new Chart(creditCtx, {
         type: 'line',
@@ -147,7 +139,7 @@ function initCharts(){
             labels: Array(100).fill(""),
             datasets: [{
                 label: 'Credits',
-                data: creditHistory,
+                data: Array(100).fill(current_credits),
                 borderColor: 'gold',
                 fill: {
                     target: 'origin',
@@ -180,7 +172,7 @@ function initCharts(){
             labels: Array(100).fill(""),
             datasets: [{
                 label: 'Power',
-                data: powerHistory,
+                data: Array(100).fill(current_gen),
                 borderColor: 'cyan',
                 fill: {
                     target: 'origin',
@@ -370,20 +362,20 @@ function cheat(){
 
 function updateChart(){
     if (creditChart) {
-        creditHistory.push(current_credits);
+        creditChart.data.datasets[0].data.push(current_credits);
         creditChart.data.labels.push("");
-        if(creditHistory.length > 100){
-            creditHistory.shift();
+        if(creditChart.data.datasets[0].data.length > 100){
+            creditChart.data.datasets[0].data.shift();
             creditChart.data.labels.shift();
         }
         creditChart.update();
     }
 
     if (powerChart) {
-        powerHistory.push(current_gen);
+        powerChart.data.datasets[0].data.push(current_gen);
         powerChart.data.labels.push("");
-        if(powerHistory.length > 100){
-            powerHistory.shift();
+        if(powerChart.data.datasets[0].data.length > 100){
+            powerChart.data.datasets[0].data.shift();
             powerChart.data.labels.shift();
         }
         powerChart.update();
