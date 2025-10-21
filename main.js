@@ -486,4 +486,19 @@ window.setInterval(function(){
     creditHistory.shift();
     powerHistory.push(current_gen);
     powerHistory.shift();
+
+    if (document.getElementById('dashboard').style.display === 'Block') {
+        updateChart();
+    }
 }, 200);
+
+function updateChart() {
+    if (creditChart) {
+        creditChart.data.datasets[0].data = creditHistory;
+        creditChart.update('none');
+    }
+    if (powerChart) {
+        powerChart.data.datasets[0].data = powerHistory;
+        powerChart.update('none');
+    }
+}
