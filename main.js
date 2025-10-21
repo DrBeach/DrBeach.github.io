@@ -487,7 +487,7 @@ window.setInterval(function(){
     powerHistory.push(current_gen);
     powerHistory.shift();
 
-    if (document.getElementById('dashboard').style.display === 'Block') {
+    if (document.getElementById('dashboard').style.display.toLowerCase() === 'block') {
         updateChart();
     }
 }, 200);
