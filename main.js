@@ -41,8 +41,10 @@ var nuclear_reactor_eff = 50;
 
 var areas = ["factory_floor", "laboratory", "management", "dashboard", "admin"]
 
-var creditChart
-var powerChart
+var creditChart;
+var powerChart;
+var creditHistory = Array(100).fill(0);
+var powerHistory = Array(100).fill(0);
 //var space_max = 100;
 
 function load(){
@@ -131,12 +133,19 @@ function show_area(area){
     }
     document.getElementById(area).style = "display: Block;"
 
-    if(area === 'dashboard' && !creditChart && !powerChart){
+    if(area === 'dashboard'){
         initCharts();
     }
 }
 
 function initCharts(){
+    if (creditChart) {
+        creditChart.destroy();
+    }
+    if (powerChart) {
+        powerChart.destroy();
+    }
+
     var creditCtx = document.getElementById('creditChart').getContext('2d');
     creditChart = new Chart(creditCtx, {
         type: 'line',
@@ -144,7 +153,7 @@ function initCharts(){
             labels: Array(100).fill(""),
             datasets: [{
                 label: 'Credits',
-                data: Array(100).fill(current_credits),
+                data: creditHistory,
                 borderColor: 'gold',
                 fill: {
                     target: 'origin',
@@ -177,7 +186,7 @@ function initCharts(){
             labels: Array(100).fill(""),
             datasets: [{
                 label: 'Power',
-                data: Array(100).fill(current_gen),
+                data: powerHistory,
                 borderColor: 'cyan',
                 fill: {
                     target: 'origin',
@@ -376,28 +385,6 @@ function cheat(){
     }
 }
 
-function updateChart(){
-    if (creditChart) {
-        creditChart.data.datasets[0].data.push(current_credits);
-        creditChart.data.labels.push("");
-        if(creditChart.data.datasets[0].data.length > 100){
-            creditChart.data.datasets[0].data.shift();
-            creditChart.data.labels.shift();
-        }
-        creditChart.update();
-    }
-
-    if (powerChart) {
-        powerChart.data.datasets[0].data.push(current_gen);
-        powerChart.data.labels.push("");
-        if(powerChart.data.datasets[0].data.length > 100){
-            powerChart.data.datasets[0].data.shift();
-            powerChart.data.labels.shift();
-        }
-        powerChart.update();
-    }
-}
-
 window.setInterval(function(){
     // Price fluctuation: Adjust price by a random amount between -0.1 and 0.1
     var price_change = (Math.random() * 0.2) - 0.1;
@@ -412,7 +399,7 @@ window.setInterval(function(){
     current_power_price = fixFloat(current_power_price);
 
     if (document.getElementById("current_power_price")) {
-        document.getElementById("current_power_price").innerHTML = current_power_price;
+        document.getElementById("current_power_price").innerHTML = fixFloat(current_power_price * price_multiplier);
     }
 
     //buyWorker(p_mechs)
@@ -495,5 +482,8 @@ window.setInterval(function(){
         }
     }
 
-    updateChart();
+    creditHistory.push(current_credits);
+    creditHistory.shift();
+    powerHistory.push(current_gen);
+    powerHistory.shift();
 }, 200);
