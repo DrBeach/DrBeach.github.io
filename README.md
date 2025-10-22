@@ -24,6 +24,19 @@ As you progress, you can hire managers to automate tasks, allowing you to focus 
 - `interface.css`: The stylesheet for the game, defining the look and feel of the UI.
 - `main.js`: The heart of the game, containing all the game logic, including calculations, upgrades, and automation.
 
+## Development Roadmap
+
+### Version 0.1.2 (Current)
+- Updated documentation to reflect the current state of the game.
+
+### Version 0.1.1
+- Added Solar Panels as a new power source.
+- Implemented Manager Controls for automation.
+- Added Manager Upgrades to unlock new abilities.
+
+### Version 0.1.0
+- Initial release of the game.
+
 ## Future Development
 
 This game is an ongoing project. Future updates may include:
