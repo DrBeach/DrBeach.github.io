@@ -37,6 +37,11 @@
                 <p>kw/h: <span id="solar_panel_eff">0</span></p>
                 <p>Cost: <span id="solar_panel_cost">0</span></p>
                 <br />
+                <button type="button" onclick="buyWindTurbine()">Buy Wind Turbine</button>
+                <p>Wind Turbines: <span id="wind_turbines">0</span></p>
+                <p>kw/h: <span id="wind_turbine_eff">0</span></p>
+                <p>Cost: <span id="wind_turbine_cost">0</span></p>
+                <br />
         </div>
 
         <div id = "laboratory" style="display: None;">
@@ -50,6 +55,11 @@
                 <p>Current kw/h: <span id="solar_panel_eff2">0</span></p>
                 <p>Upgrade cost: $<span id="solar_panel_upgrade_cost">0</span></p>
                 <p>Upgrade chance: <span id="solar_panel_upgrade_chance">0</span></p>
+                <br />
+                <button type="button" onclick="upgradeWindTurbine()">Upgrade Wind Turbines</button>
+                <p>Current kw/h: <span id="wind_turbine_eff2">0</span></p>
+                <p>Upgrade cost: $<span id="wind_turbine_upgrade_cost">0</span></p>
+                <p>Upgrade chance: <span id="wind_turbine_upgrade_chance">0</span></p>
         </div>
 
         <div id="management" style="display: None;">
@@ -66,11 +76,14 @@
                 <label><input type="checkbox" id="autobuy_worker" onchange="toggleAutoBuy('worker')"> Auto-buy Workers</label>
                 <label><input type="checkbox" id="autobuy_pedal_machine" onchange="toggleAutoBuy('pedal_machine')"> Auto-buy Pedal Machines</label>
                 <label><input type="checkbox" id="autobuy_solar_panel" onchange="toggleAutoBuy('solar_panel')" disabled> Auto-buy Solar Panels</label>
+                <label><input type="checkbox" id="autobuy_wind_turbine" onchange="toggleAutoBuy('wind_turbine')" disabled> Auto-buy Wind Turbines</label>
             </div>
             <div id="manager_upgrades" style="display: none;">
                 <h2>Manager Upgrades</h2>
                 <button type="button" onclick="upgradeManager('solar')">Unlock Auto-buy Solar</button>
                 <p>Cost: $<span id="manager_upgrade_solar_cost">10000</span></p>
+                <button type="button" onclick="upgradeManager('wind')">Unlock Auto-buy Wind</button>
+                <p>Cost: $<span id="manager_upgrade_wind_cost">50000</span></p>
             </div>
             <br />
             <button type="button" onclick="negotiatePowerPrice()" id="negotiate_button">Negotiate Power Price</button>

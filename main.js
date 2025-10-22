@@ -22,10 +22,13 @@ var manager_actions_per_tick = 1;
 var autobuy_worker = false;
 var autobuy_pedal_machine = false;
 var autobuy_solar_panel = false;
+var autobuy_wind_turbine = false;
 var manager_enabled = false;
 var manager_upgrade_solar_cost = 10000;
+var manager_upgrade_wind_cost = 50000;
 var manager_autobuy_unlocked = {
-    solar: false
+    solar: false,
+    wind: false
 };
 
 var negotiate_cooldown = 0;
@@ -35,7 +38,10 @@ var solar_panel_eff = 2;
 var solar_panel_upgrade_cost = 1000;
 var solar_panel_upgrade_chance = 0.1;
 var wind_turbines = 0;
+var wind_turbine_cost = 2500;
 var wind_turbine_eff = 10;
+var wind_turbine_upgrade_cost = 5000;
+var wind_turbine_upgrade_chance = 0.1;
 var nuclear_reactors = 0;
 var nuclear_reactor_eff = 50;
 
@@ -103,6 +109,25 @@ function load(){
         document.getElementById("manager_cost").innerHTML = manager_cost;
     }
 
+    if (document.getElementById("wind_turbines")) {
+        document.getElementById("wind_turbines").innerHTML = wind_turbines;
+    }
+    if (document.getElementById("wind_turbine_cost")) {
+        document.getElementById("wind_turbine_cost").innerHTML = wind_turbine_cost;
+    }
+    if (document.getElementById("wind_turbine_eff")) {
+        document.getElementById("wind_turbine_eff").innerHTML = wind_turbine_eff;
+    }
+    if (document.getElementById("wind_turbine_eff2")) {
+        document.getElementById("wind_turbine_eff2").innerHTML = wind_turbine_eff;
+    }
+    if (document.getElementById("wind_turbine_upgrade_cost")) {
+        document.getElementById("wind_turbine_upgrade_cost").innerHTML = wind_turbine_upgrade_cost;
+    }
+    if (document.getElementById("wind_turbine_upgrade_chance")) {
+        document.getElementById("wind_turbine_upgrade_chance").innerHTML = wind_turbine_upgrade_chance;
+    }
+
     p_mech_prototype_cost = fixFloat(Math.pow(1.1,p_mech_level) * 10  * p_mech_eff * 2 * (60*1))
     if (document.getElementById("p_mech_prototype_cost")) {
         document.getElementById("p_mech_prototype_cost").innerHTML = p_mech_prototype_cost
@@ -135,6 +160,41 @@ function show_area(area){
 
     if(area === 'dashboard'){
         initCharts();
+    }
+}
+
+function buyWindTurbine(){
+    // Price progression: 20% increase per turbine
+    if(current_credits >= wind_turbine_cost){
+        wind_turbines++;
+        current_credits -= wind_turbine_cost;
+        wind_turbine_cost = Math.floor(wind_turbine_cost * 1.2);
+
+        getCurrentGen();
+
+        document.getElementById("wind_turbines").innerHTML = wind_turbines;
+        document.getElementById("wind_turbine_cost").innerHTML = wind_turbine_cost;
+        document.getElementById("current_credits").innerHTML = current_credits;
+    }
+}
+
+// Upgrades the efficiency of all wind turbines.
+function upgradeWindTurbine(){
+    // Price progression: 80% increase per upgrade
+    if(current_credits >= wind_turbine_upgrade_cost){
+        current_credits -= wind_turbine_upgrade_cost;
+
+        if(Math.random() < wind_turbine_upgrade_chance){
+            wind_turbine_eff = fixFloat(wind_turbine_eff + 5);
+            wind_turbine_upgrade_cost = Math.floor(wind_turbine_upgrade_cost * 1.8);
+
+            document.getElementById("wind_turbine_eff").innerHTML = wind_turbine_eff;
+            document.getElementById("wind_turbine_eff2").innerHTML = wind_turbine_eff;
+            getCurrentGen();
+            document.getElementById("wind_turbine_upgrade_cost").innerHTML = wind_turbine_upgrade_cost;
+        }
+
+        document.getElementById("current_credits").innerHTML = current_credits;
     }
 }
 
@@ -336,6 +396,15 @@ function upgradeManager(type){
                 document.getElementById("manager_upgrade_solar_cost").innerHTML = "Unlocked";
             }
             break;
+        case 'wind':
+            if(current_credits >= manager_upgrade_wind_cost){
+                current_credits -= manager_upgrade_wind_cost;
+                manager_autobuy_unlocked.wind = true;
+                document.getElementById("autobuy_wind_turbine").disabled = false;
+                manager_upgrade_wind_cost = 0; // One-time purchase
+                document.getElementById("manager_upgrade_wind_cost").innerHTML = "Unlocked";
+            }
+            break;
     }
     document.getElementById("current_credits").innerHTML = current_credits;
 }
@@ -368,6 +437,9 @@ function toggleAutoBuy(resource){
             break;
         case 'solar_panel':
             autobuy_solar_panel = !autobuy_solar_panel;
+            break;
+        case 'wind_turbine':
+            autobuy_wind_turbine = !autobuy_wind_turbine;
             break;
     }
 }
@@ -454,6 +526,14 @@ window.setInterval(function(){
                     }
                 }
 
+                // C. Calculate efficiency for Wind Turbines (kW/h per credit)
+                if (autobuy_wind_turbine && current_credits >= wind_turbine_cost) {
+                    var wind_turbine_kwh_per_dollar = wind_turbine_eff / wind_turbine_cost;
+                    if (wind_turbine_kwh_per_dollar > best_buy.efficiency) {
+                        best_buy = { name: "wind_turbine", efficiency: wind_turbine_kwh_per_dollar };
+                    }
+                }
+
                 // 3. Execute the best purchase decision.
                 switch (best_buy.name) {
                     case "pedal_machine":
@@ -467,6 +547,12 @@ window.setInterval(function(){
                             document.getElementById("manager_status").innerHTML = "Buying Solar Panel";
                         }
                         buySolarPanel();
+                        break;
+                    case "wind_turbine":
+                        if (document.getElementById("manager_status")) {
+                            document.getElementById("manager_status").innerHTML = "Buying Wind Turbine";
+                        }
+                        buyWindTurbine();
                         break;
                     default:
                         if (document.getElementById("manager_status")) {
