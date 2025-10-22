@@ -121,14 +121,14 @@ function load(){
     if (document.getElementById("engineer_cost")) {
         document.getElementById("engineer_cost").innerHTML = engineer_cost;
     }
-    if (document.getElementById("engineer_bonus_pm")) {
-        document.getElementById("engineer_bonus_pm").innerHTML = (engineer_bonus_pm * 100).toFixed(2);
+    if (document.getElementById("engineer_prob_pm")) {
+        document.getElementById("engineer_prob_pm").innerHTML = ((p_mech_upgrade_chance + engineer_bonus_pm) * 100).toFixed(2);
     }
-    if (document.getElementById("engineer_bonus_sp")) {
-        document.getElementById("engineer_bonus_sp").innerHTML = (engineer_bonus_sp * 100).toFixed(2);
+    if (document.getElementById("engineer_prob_sp")) {
+        document.getElementById("engineer_prob_sp").innerHTML = ((solar_panel_upgrade_chance + engineer_bonus_sp) * 100).toFixed(2);
     }
-    if (document.getElementById("engineer_bonus_wt")) {
-        document.getElementById("engineer_bonus_wt").innerHTML = (engineer_bonus_wt * 100).toFixed(2);
+    if (document.getElementById("engineer_prob_wt")) {
+        document.getElementById("engineer_prob_wt").innerHTML = ((wind_turbine_upgrade_chance + engineer_bonus_wt) * 100).toFixed(2);
     }
 
     if (document.getElementById("wind_turbines")) {
@@ -209,9 +209,7 @@ function upgradeWindTurbine(){
         if(Math.random() < wind_turbine_upgrade_chance + engineer_bonus_wt){
             wind_turbine_eff = fixFloat(wind_turbine_eff + 5);
             wind_turbine_upgrade_cost = Math.floor(wind_turbine_upgrade_cost * 1.8);
-            engineers = 0;
-            calculateEngineerBonuses();
-            document.getElementById("engineers_count").innerHTML = engineers;
+            engineer_bonus_wt = 0;
             document.getElementById("wind_turbine_eff").innerHTML = wind_turbine_eff;
             document.getElementById("wind_turbine_eff2").innerHTML = wind_turbine_eff;
             getCurrentGen();
@@ -351,9 +349,7 @@ function upgradePedalMachine(){
             p_mech_eff = fixFloat(p_mech_eff + 0.2);
             p_mech_eff2 = p_mech_eff;
             p_mech_level++;
-            engineers = 0;
-            calculateEngineerBonuses();
-            document.getElementById("engineers_count").innerHTML = engineers;
+            engineer_bonus_pm = 0;
             getCurrentGen();
             p_mech_prototype_cost = fixFloat(Math.pow(1.1,p_mech_level) * 10  * p_mech_eff * 2 * (60*1));
             document.getElementById("p_mech_prototype_cost").innerHTML = p_mech_prototype_cost;
@@ -400,9 +396,7 @@ function upgradeSolarPanel(){
         if(Math.random() < solar_panel_upgrade_chance + engineer_bonus_sp){
             solar_panel_eff = fixFloat(solar_panel_eff + 1);
             solar_panel_upgrade_cost = Math.floor(solar_panel_upgrade_cost * 1.8);
-            engineers = 0;
-            calculateEngineerBonuses();
-            document.getElementById("engineers_count").innerHTML = engineers;
+            engineer_bonus_sp = 0;
             document.getElementById("solar_panel_eff").innerHTML = solar_panel_eff;
             document.getElementById("solar_panel_eff2").innerHTML = solar_panel_eff;
             getCurrentGen();
@@ -483,21 +477,10 @@ function buyEngineer(){
         engineers++;
         current_credits -= engineer_cost;
         engineer_cost = Math.floor(engineer_cost * 1.1);
-        calculateEngineerBonuses();
         document.getElementById("engineers_count").innerHTML = engineers;
         document.getElementById("engineer_cost").innerHTML = engineer_cost;
         document.getElementById("current_credits").innerHTML = current_credits;
     }
-}
-
-function calculateEngineerBonuses(){
-    engineer_bonus_pm = Math.min(1, engineers * 0.01);
-    engineer_bonus_sp = Math.min(1, engineers * 0.005);
-    engineer_bonus_wt = Math.min(1, engineers * 0.002);
-
-    document.getElementById("engineer_bonus_pm").innerHTML = (engineer_bonus_pm * 100).toFixed(2);
-    document.getElementById("engineer_bonus_sp").innerHTML = (engineer_bonus_sp * 100).toFixed(2);
-    document.getElementById("engineer_bonus_wt").innerHTML = (engineer_bonus_wt * 100).toFixed(2);
 }
 
 // Adds 500 credits to the player's account for testing purposes.
@@ -523,6 +506,21 @@ window.setInterval(function(){
 
     if (document.getElementById("current_power_price")) {
         document.getElementById("current_power_price").innerHTML = fixFloat(current_power_price * price_multiplier);
+    }
+
+    if(engineers > 0){
+        engineer_bonus_pm = Math.min(1 - p_mech_upgrade_chance, engineer_bonus_pm + (engineers * 0.0001));
+        engineer_bonus_sp = Math.min(1 - solar_panel_upgrade_chance, engineer_bonus_sp + (engineers * 0.00005));
+        engineer_bonus_wt = Math.min(1 - wind_turbine_upgrade_chance, engineer_bonus_wt + (engineers * 0.00002));
+    }
+    if (document.getElementById("engineer_prob_pm")) {
+        document.getElementById("engineer_prob_pm").innerHTML = ((p_mech_upgrade_chance + engineer_bonus_pm) * 100).toFixed(2);
+    }
+    if (document.getElementById("engineer_prob_sp")) {
+        document.getElementById("engineer_prob_sp").innerHTML = ((solar_panel_upgrade_chance + engineer_bonus_sp) * 100).toFixed(2);
+    }
+    if (document.getElementById("engineer_prob_wt")) {
+        document.getElementById("engineer_prob_wt").innerHTML = ((wind_turbine_upgrade_chance + engineer_bonus_wt) * 100).toFixed(2);
     }
 
     //buyWorker(p_mechs)
