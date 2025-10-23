@@ -18,6 +18,7 @@
         <button type="button" onclick="show_area('factory_floor')">Factory floor</button>
         <button type="button" onclick="show_area('laboratory')">Laboratory</button>
         <button type="button" onclick="show_area('management')">Management</button>
+        <button type="button" onclick="show_area('engineers')">Engineers</button>
         <button type="button" onclick="show_area('dashboard')">Dashboard</button>
         <button type="button" onclick="show_area('admin')">Admin</button>
         <hr>
@@ -88,6 +89,18 @@
             <br />
             <button type="button" onclick="negotiatePowerPrice()" id="negotiate_button">Negotiate Power Price</button>
             <p>Cooldown: <span id="negotiate_cooldown">0</span></p>
+        </div>
+
+        <div id="engineers" style="display: None;">
+            <br />
+            <button type="button" onclick="buyEngineer()">Hire Engineer</button>
+            <p>Engineers: <span id="engineers_count">0</span></p>
+            <p>Cost: $<span id="engineer_cost">3000</span></p>
+            <br />
+            <h3>Current Upgrade Probability</h3>
+            <p>Pedal Machine: <span id="engineer_prob_pm">0</span>%</p>
+            <p>Solar Panel: <span id="engineer_prob_sp">0</span>%</p>
+            <p>Wind Turbine: <span id="engineer_prob_wt">0</span>%</p>
         </div>
 
         <div id="dashboard" style="display: None;">
