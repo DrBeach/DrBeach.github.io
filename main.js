@@ -115,6 +115,22 @@ function load(){
         document.getElementById("manager_cost").innerHTML = manager_cost;
     }
 
+    if (document.getElementById("engineers_count")) {
+        document.getElementById("engineers_count").innerHTML = engineers;
+    }
+    if (document.getElementById("engineer_cost")) {
+        document.getElementById("engineer_cost").innerHTML = engineer_cost;
+    }
+    if (document.getElementById("engineer_prob_pm")) {
+        document.getElementById("engineer_prob_pm").innerHTML = ((p_mech_upgrade_chance + engineer_bonus_pm) * 100).toFixed(2);
+    }
+    if (document.getElementById("engineer_prob_sp")) {
+        document.getElementById("engineer_prob_sp").innerHTML = ((solar_panel_upgrade_chance + engineer_bonus_sp) * 100).toFixed(2);
+    }
+    if (document.getElementById("engineer_prob_wt")) {
+        document.getElementById("engineer_prob_wt").innerHTML = ((wind_turbine_upgrade_chance + engineer_bonus_wt) * 100).toFixed(2);
+    }
+
     if (document.getElementById("wind_turbines")) {
         document.getElementById("wind_turbines").innerHTML = wind_turbines;
     }
