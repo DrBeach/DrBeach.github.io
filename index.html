@@ -114,6 +114,11 @@
         <div id="admin" style="display: None;">
             <br />
             <button type="button" onclick="cheat()">+$500</button>
+            <button type="button" onclick="cheat50k()">+$50,000</button>
+            <br />
+            <h3>Game Speed</h3>
+            <input type="range" min="1" max="10" value="1" class="slider" id="gameSpeedSlider" oninput="setGameSpeed(this.value)">
+            <p>Speed: <span id="gameSpeedDisplay">1</span>x</p>
         </div>
         <p>End</p>
         <script type="text/javascript" src="main.js"></script>
