@@ -491,7 +491,25 @@ function cheat(){
     }
 }
 
-window.setInterval(function(){
+// Adds 50,000 credits to the player's account for testing purposes.
+function cheat50k(){
+    current_credits += 50000;
+    if (document.getElementById("current_credits")) {
+        document.getElementById("current_credits").innerHTML = current_credits;
+    }
+}
+
+var gameLoopInterval;
+var gameSpeed = 1;
+
+function setGameSpeed(speed) {
+    gameSpeed = speed;
+    document.getElementById('gameSpeedDisplay').innerHTML = speed;
+    clearInterval(gameLoopInterval);
+    gameLoopInterval = setInterval(gameLoop, 200 / gameSpeed);
+}
+
+function gameLoop(){
     // Price fluctuation: Adjust price by a random amount between -0.1 and 0.1
     var price_change = (Math.random() * 0.2) - 0.1;
     current_power_price += price_change;
@@ -636,7 +654,7 @@ window.setInterval(function(){
     if (document.getElementById('dashboard').style.display.toLowerCase() === 'block') {
         updateChart();
     }
-}, 200);
+}
 
 function updateChart() {
     if (creditChart) {
@@ -648,3 +666,6 @@ function updateChart() {
         powerChart.update('none');
     }
 }
+
+// Initial game start
+setGameSpeed(1);
