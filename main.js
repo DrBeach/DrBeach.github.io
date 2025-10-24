@@ -1,4 +1,4 @@
-var version = "0.1.1"
+var version = "0.1.3"
 var price_multiplier = 1
 var current_gen = 0
 var current_power_price = 2
