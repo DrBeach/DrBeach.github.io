@@ -32,6 +32,7 @@ var manager_autobuy_unlocked = {
 };
 
 var negotiate_cooldown = 0;
+var negotiate_bonus_duration = 0;
 var solar_panels = 0;
 var solar_panel_cost = 500;
 var solar_panel_eff = 2;
@@ -364,10 +365,8 @@ function negotiatePowerPrice(){
     if(negotiate_cooldown === 0){
         price_multiplier = 2;
         negotiate_cooldown = 60;
+        negotiate_bonus_duration = 50; // 50 ticks * 200ms = 10 seconds
         document.getElementById("negotiate_button").disabled = true;
-        setTimeout(function(){
-            price_multiplier = 1;
-        }, 10000);
     }
 }
 
@@ -564,6 +563,16 @@ function gameLoop(){
         }
         if(negotiate_cooldown === 0){
             document.getElementById("negotiate_button").disabled = false;
+        }
+    }
+
+    if(negotiate_bonus_duration > 0){
+        negotiate_bonus_duration--;
+        if(document.getElementById("negotiate_bonus_duration")){
+            document.getElementById("negotiate_bonus_duration").innerHTML = (negotiate_bonus_duration * 0.2).toFixed(1);
+        }
+        if(negotiate_bonus_duration === 0){
+            price_multiplier = 1;
         }
     }
 
