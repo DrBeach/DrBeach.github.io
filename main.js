@@ -19,6 +19,19 @@ var wind_turbine_upgrades = 0;
 var p_mech_prototype_cost = 0
 var p_mech_upgrade_chance = 0.1
 
+function formatSI(value) {
+    if (value >= 1e9) {
+        return (value / 1e9).toFixed(2) + ' GW';
+    }
+    if (value >= 1e6) {
+        return (value / 1e6).toFixed(2) + ' MW';
+    }
+    if (value >= 1e3) {
+        return (value / 1e3).toFixed(2) + ' kW';
+    }
+    return value.toFixed(2) + ' W';
+}
+
 var tier = 1;
 
 function getTier(level) {
@@ -94,7 +107,7 @@ function load(){
         document.getElementById("version").innerHTML = version
     }
     if (document.getElementById("current_gen")) {
-        document.getElementById("current_gen").innerHTML = current_gen
+        document.getElementById("current_gen").innerHTML = formatSI(current_gen)
     }
     if (document.getElementById("current_power_price")) {
         document.getElementById("current_power_price").innerHTML = current_power_price
@@ -348,7 +361,7 @@ function getCurrentGen(){
     var nuclear_power = nuclear_reactors * nuclear_reactor_eff;
 
     current_gen = fixFloat(p_mech_power + solar_power + wind_power + nuclear_power);
-    document.getElementById("current_gen").innerHTML = current_gen;
+    document.getElementById("current_gen").innerHTML = formatSI(current_gen);
 }
 
 function buyWorker(number){
@@ -474,13 +487,13 @@ function upgradeManager(type){
 // Purchases a new manager.
 function updateFormulas(){
     if (document.getElementById("p_mech_formula")) {
-        document.getElementById("p_mech_formula").innerHTML = "min(W, M) * E * (1 + Lvl / 10)";
+        document.getElementById("p_mech_formula").innerHTML = '<math><mrow><mi>min</mi><mo>(</mo><mi>Workers</mi><mo>,</mo><mi>Machines</mi><mo>)</mo><mo>&times;</mo><mi>Efficiency</mi><mo>&times;</mo><mrow><mo>(</mo><mn>1</mn><mo>+</mo><mfrac><mi>Level</mi><mn>10</mn></mfrac><mo>)</mo></mrow></mrow></math>';
     }
     if (document.getElementById("solar_panel_formula")) {
-        document.getElementById("solar_panel_formula").innerHTML = "P * E * (1 + U<sub>s</sub> / 10)";
+        document.getElementById("solar_panel_formula").innerHTML = '<math><mrow><mi>Panels</mi><mo>&times;</mo><mi>Efficiency</mi><mo>&times;</mo><mrow><mo>(</mo><mn>1</mn><mo>+</mo><mfrac><mi>Upgrades</mi><mn>10</mn></mfrac><mo>)</mo></mrow></mrow></math>';
     }
     if (document.getElementById("wind_turbine_formula")) {
-        document.getElementById("wind_turbine_formula").innerHTML = "T * E * (1 + U<sub>w</sub> / 10)";
+        document.getElementById("wind_turbine_formula").innerHTML = '<math><mrow><mi>Turbines</mi><mo>&times;</mo><mi>Efficiency</mi><mo>&times;</mo><mrow><mo>(</mo><mn>1</mn><mo>+</mo><mfrac><mi>Upgrades</mi><mn>10</mn></mfrac><mo>)</mo></mrow></mrow></math>';
     }
 }
 
