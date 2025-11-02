@@ -133,6 +133,9 @@ function load(){
     if (document.getElementById("p_mech_eff2")) {
         document.getElementById("p_mech_eff2").innerHTML = p_mech_eff2
     }
+    if (document.getElementById("p_mech_eff_next")) {
+        document.getElementById("p_mech_eff_next").innerHTML = fixFloat(p_mech_eff + 0.2);
+    }
     if (document.getElementById("solar_panels")) {
         document.getElementById("solar_panels").innerHTML = solar_panels;
     }
@@ -144,6 +147,9 @@ function load(){
     }
     if (document.getElementById("solar_panel_eff2")) {
         document.getElementById("solar_panel_eff2").innerHTML = solar_panel_eff;
+    }
+    if (document.getElementById("solar_panel_eff_next")) {
+        document.getElementById("solar_panel_eff_next").innerHTML = fixFloat(solar_panel_eff + 1);
     }
     if (document.getElementById("solar_panel_upgrade_cost")) {
         document.getElementById("solar_panel_upgrade_cost").innerHTML = solar_panel_upgrade_cost;
@@ -185,6 +191,9 @@ function load(){
     }
     if (document.getElementById("wind_turbine_eff2")) {
         document.getElementById("wind_turbine_eff2").innerHTML = wind_turbine_eff;
+    }
+    if (document.getElementById("wind_turbine_eff_next")) {
+        document.getElementById("wind_turbine_eff_next").innerHTML = fixFloat(wind_turbine_eff + 5);
     }
     if (document.getElementById("wind_turbine_upgrade_cost")) {
         document.getElementById("wind_turbine_upgrade_cost").innerHTML = wind_turbine_upgrade_cost;
@@ -258,6 +267,7 @@ function upgradeWindTurbine(){
             engineer_bonus_wt = 0;
             document.getElementById("wind_turbine_eff").innerHTML = wind_turbine_eff;
             document.getElementById("wind_turbine_eff2").innerHTML = wind_turbine_eff;
+            document.getElementById("wind_turbine_eff_next").innerHTML = fixFloat(wind_turbine_eff + 5);
             getCurrentGen();
             updateFormulas();
             document.getElementById("wind_turbine_upgrade_cost").innerHTML = wind_turbine_upgrade_cost;
@@ -350,12 +360,15 @@ function getCurrentGen(){
     //p_mech gen
     var max_utility = Math.max(p_mechs, workers) - (Math.max(p_mechs, workers) - Math.min(p_mechs, workers));
     var p_mech_power = max_utility * p_mech_eff * (1 + p_mech_level / 10);
+    document.getElementById("p_mech_total").innerHTML = formatSI(p_mech_power);
 
     //solar panel gen
     var solar_power = solar_panels * solar_panel_eff * (1 + solar_panel_upgrades / 10);
+    document.getElementById("solar_panel_total").innerHTML = formatSI(solar_power);
 
     //wind turbine gen
     var wind_power = wind_turbines * wind_turbine_eff * (1 + wind_turbine_upgrades / 10);
+    document.getElementById("wind_turbine_total").innerHTML = formatSI(wind_power);
 
     //nuclear reactor gen
     var nuclear_power = nuclear_reactors * nuclear_reactor_eff;
@@ -406,6 +419,7 @@ function upgradePedalMachine(){
             document.getElementById("p_mech_prototype_cost").innerHTML = p_mech_prototype_cost;
             document.getElementById("p_mech_eff").innerHTML = p_mech_eff;
             document.getElementById("p_mech_eff2").innerHTML = p_mech_eff2;
+            document.getElementById("p_mech_eff_next").innerHTML = fixFloat(p_mech_eff + 0.2);
         }
         document.getElementById("current_credits").innerHTML = current_credits;
     }
@@ -450,6 +464,7 @@ function upgradeSolarPanel(){
             engineer_bonus_sp = 0;
             document.getElementById("solar_panel_eff").innerHTML = solar_panel_eff;
             document.getElementById("solar_panel_eff2").innerHTML = solar_panel_eff;
+            document.getElementById("solar_panel_eff_next").innerHTML = fixFloat(solar_panel_eff + 1);
             getCurrentGen();
             updateFormulas();
             document.getElementById("solar_panel_upgrade_cost").innerHTML = solar_panel_upgrade_cost;
