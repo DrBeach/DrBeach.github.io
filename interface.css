@@ -17,3 +17,8 @@ body {
     width: 400px !important;
     height: 200px !important;
 }
+
+.formula {
+    font-style: italic;
+    color: #cccccc;
+}
