@@ -31,6 +31,12 @@ var manager_autobuy_unlocked = {
     wind: false
 };
 
+var engineering_manager_enabled = false;
+var autobuy_pedal_machine_upgrade = false;
+var autobuy_solar_panel_upgrade = false;
+var autobuy_wind_turbine_upgrade = false;
+var engineering_manager_threshold = 50;
+
 var negotiate_cooldown = 0;
 var negotiate_bonus_duration = 0;
 var solar_panels = 0;
@@ -444,6 +450,7 @@ function buyManager(){
         if(managers > 0){
             document.getElementById("manager_controls").style.display = "block";
             document.getElementById("manager_upgrades").style.display = "block";
+            document.getElementById("engineering_manager_controls").style.display = "block";
         }
     }
 }
@@ -469,6 +476,28 @@ function toggleAutoBuy(resource){
 // Toggles the master manager automation on and off.
 function toggleManager(){
     manager_enabled = !manager_enabled;
+}
+
+function toggleEngineeringManager(){
+    engineering_manager_enabled = !engineering_manager_enabled;
+}
+
+function setUpgradeThreshold(){
+    engineering_manager_threshold = parseInt(document.getElementById("upgrade_threshold").value);
+}
+
+function toggleAutoUpgrade(resource){
+    switch(resource){
+        case 'pedal_machine':
+            autobuy_pedal_machine_upgrade = !autobuy_pedal_machine_upgrade;
+            break;
+        case 'solar_panel':
+            autobuy_solar_panel_upgrade = !autobuy_solar_panel_upgrade;
+            break;
+        case 'wind_turbine':
+            autobuy_wind_turbine_upgrade = !autobuy_wind_turbine_upgrade;
+            break;
+    }
 }
 
 function buyEngineer(){
@@ -647,6 +676,18 @@ function gameLoop(){
                         }
                         break;
                 }
+            }
+        }
+
+        if(engineering_manager_enabled){
+            if(autobuy_pedal_machine_upgrade && (p_mech_upgrade_chance + engineer_bonus_pm) >= (engineering_manager_threshold / 100)){
+                upgradePedalMachine();
+            }
+            if(autobuy_solar_panel_upgrade && (solar_panel_upgrade_chance + engineer_bonus_sp) >= (engineering_manager_threshold / 100)){
+                upgradeSolarPanel();
+            }
+            if(autobuy_wind_turbine_upgrade && (wind_turbine_upgrade_chance + engineer_bonus_wt) >= (engineering_manager_threshold / 100)){
+                upgradeWindTurbine();
             }
         }
     } else if(managers > 0){
