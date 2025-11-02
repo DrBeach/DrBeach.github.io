@@ -12,9 +12,26 @@ var p_mech_eff = 0.5
 var p_mech_eff2 = p_mech_eff
 var init_p_mach_cost = 40
 var p_mech_level = 1
+var p_mech_upgrades = 0
 
 var p_mech_prototype_cost = 0
 var p_mech_upgrade_chance = 0.1
+
+var tier = 1;
+
+function getTier(level) {
+    if (level > 100) {
+        return 5;
+    } else if (level > 50) {
+        return 4;
+    } else if (level > 25) {
+        return 3;
+    } else if (level > 10) {
+        return 2;
+    } else {
+        return 1;
+    }
+}
 
 var managers = 0;
 var manager_cost = 1000;
@@ -41,14 +58,18 @@ var negotiate_cooldown = 0;
 var negotiate_bonus_duration = 0;
 var solar_panels = 0;
 var solar_panel_cost = 500;
+var init_solar_panel_cost = 500;
 var solar_panel_eff = 2;
 var solar_panel_upgrade_cost = 1000;
 var solar_panel_upgrade_chance = 0.1;
+var solar_panel_upgrades = 0;
 var wind_turbines = 0;
 var wind_turbine_cost = 2500;
+var init_wind_turbine_cost = 2500;
 var wind_turbine_eff = 10;
 var wind_turbine_upgrade_cost = 5000;
 var wind_turbine_upgrade_chance = 0.1;
+var wind_turbine_upgrades = 0;
 var nuclear_reactors = 0;
 var nuclear_reactor_eff = 50;
 
@@ -162,12 +183,12 @@ function load(){
         document.getElementById("p_mech_prototype_cost").innerHTML = p_mech_prototype_cost
     }
     if (document.getElementById("p_mech_upgrade_chance")) {
-        document.getElementById("p_mech_upgrade_chance").innerHTML = p_mech_upgrade_chance
+        document.getElementById("p_mech_upgrade_chance").innerHTML = ((p_mech_upgrade_chance + (0.5 * p_mech_upgrades) / (p_mech_upgrades + 10)) * 100).toFixed(2) + "%";
     }
     
     //fix
     if (document.getElementById("p_mach_cost")) {
-        document.getElementById("p_mach_cost").innerHTML = Math.floor(init_p_mach_cost * Math.pow(1.1,p_mechs));
+        document.getElementById("p_mach_cost").innerHTML = Math.floor(init_p_mach_cost * Math.pow(1.15,p_mechs) + p_mechs * Math.pow(1.2, getTier(p_mechs)));
     }
 
     updateFormulas();
@@ -198,7 +219,7 @@ function buyWindTurbine(){
     if(current_credits >= wind_turbine_cost){
         wind_turbines++;
         current_credits -= wind_turbine_cost;
-        wind_turbine_cost = Math.floor(wind_turbine_cost * 1.2);
+        wind_turbine_cost = Math.floor(init_wind_turbine_cost * Math.pow(1.08, wind_turbines) + wind_turbines * Math.pow(1.4, getTier(wind_turbines)));
 
         getCurrentGen();
         updateFormulas();
@@ -215,9 +236,10 @@ function upgradeWindTurbine(){
     if(current_credits >= wind_turbine_upgrade_cost){
         current_credits -= wind_turbine_upgrade_cost;
 
-        if(Math.random() < wind_turbine_upgrade_chance + engineer_bonus_wt){
+        if(Math.random() < wind_turbine_upgrade_chance + (0.3 * wind_turbine_upgrades) / (wind_turbine_upgrades + 20) + engineer_bonus_wt){
             wind_turbine_eff = fixFloat(wind_turbine_eff + 5);
             wind_turbine_upgrade_cost = Math.floor(wind_turbine_upgrade_cost * 1.8);
+            wind_turbine_upgrades++;
             engineer_bonus_wt = 0;
             document.getElementById("wind_turbine_eff").innerHTML = wind_turbine_eff;
             document.getElementById("wind_turbine_eff2").innerHTML = wind_turbine_eff;
@@ -312,13 +334,13 @@ function fixFloat(number){
 function getCurrentGen(){
     //p_mech gen
     var max_utility = Math.max(p_mechs, workers) - (Math.max(p_mechs, workers) - Math.min(p_mechs, workers));
-    var p_mech_power = max_utility * p_mech_eff;
+    var p_mech_power = max_utility * p_mech_eff * (1 + p_mech_level / 10);
 
     //solar panel gen
-    var solar_power = solar_panels * solar_panel_eff;
+    var solar_power = solar_panels * solar_panel_eff * (1 + p_mechs / 100);
 
     //wind turbine gen
-    var wind_power = wind_turbines * wind_turbine_eff;
+    var wind_power = wind_turbines * wind_turbine_eff * (1 + solar_panels / 100);
 
     //nuclear reactor gen
     var nuclear_power = nuclear_reactors * nuclear_reactor_eff;
@@ -339,7 +361,7 @@ function buyWorker(number){
 };
 
 function buyPedalMachine(){
-    var p_mech_cost = Math.floor(init_p_mach_cost * Math.pow(1.1,p_mechs));
+    var p_mech_cost = Math.floor(init_p_mach_cost * Math.pow(1.15,p_mechs) + p_mechs * Math.pow(1.2, getTier(p_mechs)));
     if(current_credits >= p_mech_cost){
         p_mechs = p_mechs + 1
         current_credits = current_credits - p_mech_cost
@@ -349,7 +371,7 @@ function buyPedalMachine(){
         document.getElementById("current_credits").innerHTML = current_credits;
         document.getElementById("p_mechs").innerHTML = p_mechs;
     };
-    var nextCost = Math.floor(init_p_mach_cost * Math.pow(1.1,p_mechs));
+    var nextCost = Math.floor(init_p_mach_cost * Math.pow(1.15,p_mechs) + p_mechs * Math.pow(1.2, getTier(p_mechs)));
     document.getElementById("p_mach_cost").innerHTML = nextCost;
 };
 
@@ -357,10 +379,11 @@ function upgradePedalMachine(){
     p_mech_prototype_cost = fixFloat(Math.pow(1.1,p_mech_level) * 10  * p_mech_eff * 2 * (60*1))
     if(current_credits >= p_mech_prototype_cost){
         current_credits -= p_mech_prototype_cost;
-        if(Math.random() < p_mech_upgrade_chance + engineer_bonus_pm){
+        if(Math.random() < p_mech_upgrade_chance + (0.5 * p_mech_upgrades) / (p_mech_upgrades + 10) + engineer_bonus_pm){
             p_mech_eff = fixFloat(p_mech_eff + 0.2);
             p_mech_eff2 = p_mech_eff;
             p_mech_level++;
+            p_mech_upgrades++;
             engineer_bonus_pm = 0;
             getCurrentGen();
             updateFormulas();
@@ -388,7 +411,7 @@ function buySolarPanel(){
     if(current_credits >= solar_panel_cost){
         solar_panels++;
         current_credits -= solar_panel_cost;
-        solar_panel_cost = Math.floor(solar_panel_cost * 1.2);
+        solar_panel_cost = Math.floor(init_solar_panel_cost * Math.pow(1.07, solar_panels) + solar_panels * Math.pow(1.3, getTier(solar_panels)));
 
         getCurrentGen();
         updateFormulas();
@@ -405,9 +428,10 @@ function upgradeSolarPanel(){
     if(current_credits >= solar_panel_upgrade_cost){
         current_credits -= solar_panel_upgrade_cost;
 
-        if(Math.random() < solar_panel_upgrade_chance + engineer_bonus_sp){
+        if(Math.random() < solar_panel_upgrade_chance + (0.4 * solar_panel_upgrades) / (solar_panel_upgrades + 15) + engineer_bonus_sp){
             solar_panel_eff = fixFloat(solar_panel_eff + 1);
             solar_panel_upgrade_cost = Math.floor(solar_panel_upgrade_cost * 1.8);
+            solar_panel_upgrades++;
             engineer_bonus_sp = 0;
             document.getElementById("solar_panel_eff").innerHTML = solar_panel_eff;
             document.getElementById("solar_panel_eff2").innerHTML = solar_panel_eff;
@@ -448,13 +472,13 @@ function upgradeManager(type){
 // Purchases a new manager.
 function updateFormulas(){
     if (document.getElementById("p_mech_formula")) {
-        document.getElementById("p_mech_formula").innerHTML = "min(workers, p_mechs) * p_mech_eff";
+        document.getElementById("p_mech_formula").innerHTML = "min(workers, p_mechs) * p_mech_eff * (1 + p_mech_level / 10)";
     }
     if (document.getElementById("solar_panel_formula")) {
-        document.getElementById("solar_panel_formula").innerHTML = "solar_panels * solar_panel_eff";
+        document.getElementById("solar_panel_formula").innerHTML = "solar_panels * solar_panel_eff * (1 + p_mechs / 100)";
     }
     if (document.getElementById("wind_turbine_formula")) {
-        document.getElementById("wind_turbine_formula").innerHTML = "wind_turbines * wind_turbine_eff";
+        document.getElementById("wind_turbine_formula").innerHTML = "wind_turbines * wind_turbine_eff * (1 + solar_panels / 100)";
     }
 }
 
@@ -592,13 +616,13 @@ function gameLoop(){
     }
 
     if (document.getElementById("p_mech_upgrade_chance")) {
-        document.getElementById("p_mech_upgrade_chance").innerHTML = ((p_mech_upgrade_chance + engineer_bonus_pm) * 100).toFixed(2) + "%";
+        document.getElementById("p_mech_upgrade_chance").innerHTML = ((p_mech_upgrade_chance + (0.5 * p_mech_upgrades) / (p_mech_upgrades + 10) + engineer_bonus_pm) * 100).toFixed(2) + "%";
     }
     if (document.getElementById("solar_panel_upgrade_chance")) {
-        document.getElementById("solar_panel_upgrade_chance").innerHTML = ((solar_panel_upgrade_chance + engineer_bonus_sp) * 100).toFixed(2) + "%";
+        document.getElementById("solar_panel_upgrade_chance").innerHTML = ((solar_panel_upgrade_chance + (0.4 * solar_panel_upgrades) / (solar_panel_upgrades + 15) + engineer_bonus_sp) * 100).toFixed(2) + "%";
     }
     if (document.getElementById("wind_turbine_upgrade_chance")) {
-        document.getElementById("wind_turbine_upgrade_chance").innerHTML = ((wind_turbine_upgrade_chance + engineer_bonus_wt) * 100).toFixed(2) + "%";
+        document.getElementById("wind_turbine_upgrade_chance").innerHTML = ((wind_turbine_upgrade_chance + (0.3 * wind_turbine_upgrades) / (wind_turbine_upgrades + 20) + engineer_bonus_wt) * 100).toFixed(2) + "%";
     }
 
     //buyWorker(p_mechs)
@@ -645,7 +669,7 @@ function gameLoop(){
 
                 // 2. If workers are staffed, find the most cost-effective generator to buy.
                 var best_buy = { name: "none", efficiency: 0 };
-                var p_mech_current_cost = Math.floor(init_p_mach_cost * Math.pow(1.1, p_mechs));
+                var p_mech_current_cost = Math.floor(init_p_mach_cost * Math.pow(1.15, p_mechs) + p_mechs * Math.pow(1.2, getTier(p_mechs)));
 
                 // A. Calculate efficiency for Pedal Machines (kW/h per credit)
                 if (autobuy_pedal_machine && current_credits >= p_mech_current_cost) {
