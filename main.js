@@ -3,6 +3,7 @@ var price_multiplier = 1
 var current_gen = 0
 var current_power_price = 2
 var current_credits = 500
+var time = 0;
 var current_per_hour = 0
 var work_cost = 0.1
 var work_cost_per_hour = 0
@@ -15,6 +16,8 @@ var p_mech_level = 1
 var p_mech_upgrades = 0
 var solar_panel_upgrades = 0;
 var wind_turbine_upgrades = 0;
+var transformer_eff = 0.7;
+var powerline_eff = 0.7;
 
 var p_mech_prototype_cost = 0
 var p_mech_upgrade_chance = 0.1
@@ -94,7 +97,7 @@ var engineer_bonus_pm = 0;
 var engineer_bonus_sp = 0;
 var engineer_bonus_wt = 0;
 
-var areas = ["factory_floor", "laboratory", "management", "engineers", "dashboard", "admin"]
+var areas = ["factory_floor", "laboratory", "management", "engineers", "dashboard", "admin", "transmission"]
 
 var creditChart;
 var powerChart;
@@ -219,7 +222,8 @@ function load(){
 }
 
 function getCredits(){
-    current_per_hour = (current_power_price * price_multiplier * current_gen) - work_cost_per_hour
+    var transmitted_power = current_gen * transformer_eff * powerline_eff;
+    current_per_hour = (current_power_price * price_multiplier * transmitted_power) - work_cost_per_hour
     current_per_hour = fixFloat(current_per_hour)
     current_credits = current_credits + current_per_hour
     current_credits = fixFloat(current_credits)
@@ -613,9 +617,21 @@ function setGameSpeed(speed) {
 }
 
 function gameLoop(){
-    // Price fluctuation: Adjust price by a random amount between -0.1 and 0.1
-    var price_change = (Math.random() * 0.2) - 0.1;
-    current_power_price += price_change;
+    time++;
+    var hour = Math.floor(time / 60) % 24;
+    var minute = time % 60;
+    document.getElementById("time").innerHTML = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+
+    // Day-night cycle using a cosine wave
+    var base_price = 3;
+    var amplitude = 2;
+    var period = 24 * 60; // 24 hours in minutes
+    var price_offset = amplitude * Math.cos(((time - (12 * 60)) / period) * 2 * Math.PI);
+
+    // Add randomness
+    var random_fluctuation = (Math.random() * 0.4) - 0.2;
+
+    current_power_price = base_price + price_offset + random_fluctuation;
 
     // Clamp the price to a reasonable range (e.g., 0.5 to 5)
     if(current_power_price < 0.5){
@@ -778,6 +794,10 @@ function gameLoop(){
 
     if (document.getElementById('dashboard').style.display.toLowerCase() === 'block') {
         updateChart();
+    }
+
+    if (current_gen >= 100) {
+        document.getElementById("transmission_button").style.display = "inline-block";
     }
 }
 
