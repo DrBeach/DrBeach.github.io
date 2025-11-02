@@ -9,6 +9,7 @@
         <p>Welcome!!!! <span id="version">0.1.2</span></p>
         <br />
         <h2>Power Stats:</h2>
+        <p>Time: <span id="time">00:00</span></p>
         <p>Current power generation is: <span id="current_gen">0</span></p>
         <p>Current sale price is: $<span id="current_power_price">0</span> per kW/h</p>
         <p>Credits per hour: $<span id="current_per_hour">0</span></p>
@@ -20,6 +21,7 @@
         <button type="button" onclick="show_area('management')">Management</button>
         <button type="button" onclick="show_area('engineers')">Engineers</button>
         <button type="button" onclick="show_area('dashboard')">Dashboard</button>
+        <button type="button" id="transmission_button" onclick="show_area('transmission')" style="display: none;">Transmission</button>
         <button type="button" onclick="show_area('admin')">Admin</button>
         <hr>
         <div id="factory_floor" style="display: Block;">
@@ -30,21 +32,21 @@
                 <br />
                 <button type="button" onclick="buyPedalMachine()">Buy Pedal Machine (tm)</button>
                 <p>Pedal Machines: <span id="p_mechs">0</span></p>
-                <p>kw/h: <span id="p_mech_eff">0</span></p>
+                <p>Efficiency: <span id="p_mech_eff">0</span> kW/h</p>
                 <p class="formula">Formula: <span id="p_mech_formula"></span></p>
                 <p>Total: <span id="p_mech_total">0</span> kw/h</p>
                 <p>Cost: <span id="p_mach_cost">0</span></p>
                 <br />
                 <button type="button" onclick="buySolarPanel()">Buy Solar Panel</button>
                 <p>Solar Panels: <span id="solar_panels">0</span></p>
-                <p>kw/h: <span id="solar_panel_eff">0</span></p>
+                <p>Efficiency: <span id="solar_panel_eff">0</span> kW/h</p>
                 <p class="formula">Formula: <span id="solar_panel_formula"></span></p>
                 <p>Total: <span id="solar_panel_total">0</span> kw/h</p>
                 <p>Cost: <span id="solar_panel_cost">0</span></p>
                 <br />
                 <button type="button" onclick="buyWindTurbine()">Buy Wind Turbine</button>
                 <p>Wind Turbines: <span id="wind_turbines">0</span></p>
-                <p>kw/h: <span id="wind_turbine_eff">0</span></p>
+                <p>Efficiency: <span id="wind_turbine_eff">0</span> kW/h</p>
                 <p class="formula">Formula: <span id="wind_turbine_formula"></span></p>
                 <p>Total: <span id="wind_turbine_total">0</span> kw/h</p>
                 <p>Cost: <span id="wind_turbine_cost">0</span></p>
@@ -135,6 +137,11 @@
             <h3>Game Speed</h3>
             <input type="range" min="1" max="10" value="1" class="slider" id="gameSpeedSlider" oninput="setGameSpeed(this.value)">
             <p>Speed: <span id="gameSpeedDisplay">1</span>x</p>
+        </div>
+        <div id="transmission" style="display: none;">
+            <h2>Transmission</h2>
+            <p>Transformer Efficiency: <span id="transformer_eff">70</span>%</p>
+            <p>Powerline Efficiency: <span id="powerline_eff">70</span>%</p>
         </div>
         <p>End</p>
         <script type="text/javascript" src="main.js"></script>
