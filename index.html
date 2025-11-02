@@ -82,6 +82,15 @@
                 <label><input type="checkbox" id="autobuy_solar_panel" onchange="toggleAutoBuy('solar_panel')" disabled> Auto-buy Solar Panels</label>
                 <label><input type="checkbox" id="autobuy_wind_turbine" onchange="toggleAutoBuy('wind_turbine')" disabled> Auto-buy Wind Turbines</label>
             </div>
+            <div id="engineering_manager_controls" style="display: none;">
+                <h2>Engineering Manager Controls</h2>
+                <label><input type="checkbox" id="engineering_manager_enabled" onchange="toggleEngineeringManager()"> Engineering Manager Enabled</label>
+                <p>Upgrade Threshold: <input type="number" id="upgrade_threshold" min="0" max="100" value="50" onchange="setUpgradeThreshold()">%</p>
+                <br>
+                <label><input type="checkbox" id="autobuy_pedal_machine_upgrade" onchange="toggleAutoUpgrade('pedal_machine')"> Auto-upgrade Pedal Machines</label>
+                <label><input type="checkbox" id="autobuy_solar_panel_upgrade" onchange="toggleAutoUpgrade('solar_panel')"> Auto-upgrade Solar Panels</label>
+                <label><input type="checkbox" id="autobuy_wind_turbine_upgrade" onchange="toggleAutoUpgrade('wind_turbine')"> Auto-upgrade Wind Turbines</label>
+            </div>
             <div id="manager_upgrades" style="display: none;">
                 <h2>Manager Upgrades</h2>
                 <button type="button" onclick="upgradeManager('solar')">Unlock Auto-buy Solar</button>
