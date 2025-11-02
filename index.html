@@ -32,18 +32,21 @@
                 <p>Pedal Machines: <span id="p_mechs">0</span></p>
                 <p>kw/h: <span id="p_mech_eff">0</span></p>
                 <p class="formula">Formula: <span id="p_mech_formula"></span></p>
+                <p>Total: <span id="p_mech_total">0</span> kw/h</p>
                 <p>Cost: <span id="p_mach_cost">0</span></p>
                 <br />
                 <button type="button" onclick="buySolarPanel()">Buy Solar Panel</button>
                 <p>Solar Panels: <span id="solar_panels">0</span></p>
                 <p>kw/h: <span id="solar_panel_eff">0</span></p>
                 <p class="formula">Formula: <span id="solar_panel_formula"></span></p>
+                <p>Total: <span id="solar_panel_total">0</span> kw/h</p>
                 <p>Cost: <span id="solar_panel_cost">0</span></p>
                 <br />
                 <button type="button" onclick="buyWindTurbine()">Buy Wind Turbine</button>
                 <p>Wind Turbines: <span id="wind_turbines">0</span></p>
                 <p>kw/h: <span id="wind_turbine_eff">0</span></p>
                 <p class="formula">Formula: <span id="wind_turbine_formula"></span></p>
+                <p>Total: <span id="wind_turbine_total">0</span> kw/h</p>
                 <p>Cost: <span id="wind_turbine_cost">0</span></p>
                 <br />
         </div>
@@ -51,17 +54,17 @@
         <div id = "laboratory" style="display: None;">
                 <br />
                 <button type="button" onclick="upgradePedalMachine()">Prototype Pedal Machine Upgrade</button>
-                <p>Current kw/h: <span id="p_mech_eff2">0</span></p>
+                <p>Current kw/h: <span id="p_mech_eff2">0</span> -> <span id="p_mech_eff_next">0</span></p>
                 <p>Upgrade cost: $<span id="p_mech_prototype_cost">0</span></p>
                 <p>Upgrade chance: <span id="p_mech_upgrade_chance">0</span></p>
                 <br />
                 <button type="button" onclick="upgradeSolarPanel()">Upgrade Solar Panels</button>
-                <p>Current kw/h: <span id="solar_panel_eff2">0</span></p>
+                <p>Current kw/h: <span id="solar_panel_eff2">0</span> -> <span id="solar_panel_eff_next">0</span></p>
                 <p>Upgrade cost: $<span id="solar_panel_upgrade_cost">0</span></p>
                 <p>Upgrade chance: <span id="solar_panel_upgrade_chance">0</span></p>
                 <br />
                 <button type="button" onclick="upgradeWindTurbine()">Upgrade Wind Turbines</button>
-                <p>Current kw/h: <span id="wind_turbine_eff2">0</span></p>
+                <p>Current kw/h: <span id="wind_turbine_eff2">0</span> -> <span id="wind_turbine_eff_next">0</span></p>
                 <p>Upgrade cost: $<span id="wind_turbine_upgrade_cost">0</span></p>
                 <p>Upgrade chance: <span id="wind_turbine_upgrade_chance">0</span></p>
         </div>
