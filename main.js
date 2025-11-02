@@ -18,6 +18,9 @@ var solar_panel_upgrades = 0;
 var wind_turbine_upgrades = 0;
 var transformer_eff = 0.7;
 var powerline_eff = 0.7;
+var households = 4;
+var power_demand = 0;
+var base_household_demand = 0.5; // in kW
 
 var p_mech_prototype_cost = 0
 var p_mech_upgrade_chance = 0.1
@@ -97,7 +100,7 @@ var engineer_bonus_pm = 0;
 var engineer_bonus_sp = 0;
 var engineer_bonus_wt = 0;
 
-var areas = ["factory_floor", "laboratory", "management", "engineers", "dashboard", "admin", "transmission"]
+var areas = ["factory_floor", "laboratory", "management", "engineers", "dashboard", "admin"]
 
 var creditChart;
 var powerChart;
@@ -218,16 +221,25 @@ function load(){
         document.getElementById("p_mach_cost").innerHTML = Math.floor(init_p_mach_cost * Math.pow(1.15,p_mechs) + p_mechs * Math.pow(1.2, getTier(p_mechs)));
     }
 
+    if (document.getElementById("households")) {
+        document.getElementById("households").innerHTML = households;
+    }
+
+    if (document.getElementById("power_demand")) {
+        document.getElementById("power_demand").innerHTML = formatSI(power_demand);
+    }
+
     updateFormulas();
 }
 
 function getCredits(){
-    var transmitted_power = current_gen * transformer_eff * powerline_eff;
-    current_per_hour = (current_power_price * price_multiplier * transmitted_power) - work_cost_per_hour
-    current_per_hour = fixFloat(current_per_hour)
-    current_credits = current_credits + current_per_hour
-    current_credits = fixFloat(current_credits)
-    document.getElementById("current_credits").innerHTML = current_credits
+    var transmitted_power = current_gen * transformer_eff;
+    var sold_power = Math.min(transmitted_power, power_demand);
+    current_per_hour = (current_power_price * price_multiplier * sold_power) - work_cost_per_hour;
+    current_per_hour = fixFloat(current_per_hour);
+    current_credits = current_credits + current_per_hour;
+    current_credits = fixFloat(current_credits);
+    document.getElementById("current_credits").innerHTML = current_credits;
     document.getElementById("current_per_hour").innerHTML = current_per_hour;
 };
 
@@ -617,10 +629,18 @@ function setGameSpeed(speed) {
 }
 
 function gameLoop(){
-    time++;
+    time += 5;
     var hour = Math.floor(time / 60) % 24;
     var minute = time % 60;
     document.getElementById("time").innerHTML = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+
+    // Calculate powerline efficiency based on number of households
+    powerline_eff = Math.pow(0.99, households);
+    document.getElementById("powerline_eff").innerHTML = (powerline_eff * 100).toFixed(2);
+
+    // Calculate total power demand
+    power_demand = households * base_household_demand * powerline_eff * 1000; // in W
+    document.getElementById("power_demand").innerHTML = formatSI(power_demand);
 
     // Day-night cycle using a cosine wave
     var base_price = 3;
@@ -794,10 +814,6 @@ function gameLoop(){
 
     if (document.getElementById('dashboard').style.display.toLowerCase() === 'block') {
         updateChart();
-    }
-
-    if (current_gen >= 100) {
-        document.getElementById("transmission_button").style.display = "inline-block";
     }
 }
 
