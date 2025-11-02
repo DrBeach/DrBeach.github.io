@@ -164,6 +164,7 @@ function load(){
         document.getElementById("p_mach_cost").innerHTML = Math.floor(init_p_mach_cost * Math.pow(1.1,p_mechs));
     }
 
+    updateFormulas();
 }
 
 function getCredits(){
@@ -194,6 +195,7 @@ function buyWindTurbine(){
         wind_turbine_cost = Math.floor(wind_turbine_cost * 1.2);
 
         getCurrentGen();
+        updateFormulas();
 
         document.getElementById("wind_turbines").innerHTML = wind_turbines;
         document.getElementById("wind_turbine_cost").innerHTML = wind_turbine_cost;
@@ -214,6 +216,7 @@ function upgradeWindTurbine(){
             document.getElementById("wind_turbine_eff").innerHTML = wind_turbine_eff;
             document.getElementById("wind_turbine_eff2").innerHTML = wind_turbine_eff;
             getCurrentGen();
+            updateFormulas();
             document.getElementById("wind_turbine_upgrade_cost").innerHTML = wind_turbine_upgrade_cost;
         }
 
@@ -321,6 +324,7 @@ function getCurrentGen(){
 function buyWorker(number){
     workers = workers + number;
     getCurrentGen()
+    updateFormulas();
     document.getElementById("workers").innerHTML = workers;
     var work_cost_temp = work_cost * workers;
     work_cost_temp = fixFloat(work_cost_temp)
@@ -335,6 +339,7 @@ function buyPedalMachine(){
         current_credits = current_credits - p_mech_cost
         current_credits = fixFloat(current_credits)
         getCurrentGen()
+        updateFormulas();
         document.getElementById("current_credits").innerHTML = current_credits;
         document.getElementById("p_mechs").innerHTML = p_mechs;
     };
@@ -352,6 +357,7 @@ function upgradePedalMachine(){
             p_mech_level++;
             engineer_bonus_pm = 0;
             getCurrentGen();
+            updateFormulas();
             p_mech_prototype_cost = fixFloat(Math.pow(1.1,p_mech_level) * 10  * p_mech_eff * 2 * (60*1));
             document.getElementById("p_mech_prototype_cost").innerHTML = p_mech_prototype_cost;
             document.getElementById("p_mech_eff").innerHTML = p_mech_eff;
@@ -379,6 +385,7 @@ function buySolarPanel(){
         solar_panel_cost = Math.floor(solar_panel_cost * 1.2);
 
         getCurrentGen();
+        updateFormulas();
 
         document.getElementById("solar_panels").innerHTML = solar_panels;
         document.getElementById("solar_panel_cost").innerHTML = solar_panel_cost;
@@ -399,6 +406,7 @@ function upgradeSolarPanel(){
             document.getElementById("solar_panel_eff").innerHTML = solar_panel_eff;
             document.getElementById("solar_panel_eff2").innerHTML = solar_panel_eff;
             getCurrentGen();
+            updateFormulas();
             document.getElementById("solar_panel_upgrade_cost").innerHTML = solar_panel_upgrade_cost;
         }
 
@@ -429,6 +437,19 @@ function upgradeManager(type){
             break;
     }
     document.getElementById("current_credits").innerHTML = current_credits;
+}
+
+// Purchases a new manager.
+function updateFormulas(){
+    if (document.getElementById("p_mech_formula")) {
+        document.getElementById("p_mech_formula").innerHTML = "min(workers, p_mechs) * p_mech_eff";
+    }
+    if (document.getElementById("solar_panel_formula")) {
+        document.getElementById("solar_panel_formula").innerHTML = "solar_panels * solar_panel_eff";
+    }
+    if (document.getElementById("wind_turbine_formula")) {
+        document.getElementById("wind_turbine_formula").innerHTML = "wind_turbines * wind_turbine_eff";
+    }
 }
 
 // Purchases a new manager.
