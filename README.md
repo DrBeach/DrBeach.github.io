@@ -44,6 +44,15 @@ For those who want to speed things up, the Admin panel offers a couple of cheat 
 - `interface.css`: The stylesheet for the game, defining the look and feel of the UI.
 - `main.js`: The heart of the game, containing all the game logic, including calculations, upgrades, and automation.
 
+## World Simulation
+
+A significant component of this game is the interactions of systems. Many of the world and transmission variables are interconnected, creating a dynamic and emergent gameplay experience. Here are some of the key relationships:
+
+- **Time of Day**: The time of day affects the temperature and the price of power, with both peaking in the middle of the day.
+- **Temperature**: The temperature is influenced by the time of day, but it also has its own random fluctuations. It directly impacts the efficiency of your power lines, with hotter temperatures leading to greater power loss. It also affects the power demand, with extreme temperatures (both hot and cold) increasing the demand for power.
+- **Society's Well-being**: This is a measure of how happy your citizens are. It's affected by the temperature, with citizens preferring a comfortable 22°C. It also has a small impact on the price of power, with a happier populace being willing to pay a little more.
+- **Households**: The number of households you're supplying power to affects the power demand. More households mean more demand, but they also put a greater strain on your power lines, leading to a decrease in efficiency.
+
 ## Development Roadmap
 
 ### Version 0.1.3 (Current)
@@ -71,9 +80,5 @@ This game is an ongoing project. Future updates may include:
 - More complex upgrade paths and research trees.
 - A more dynamic market for power prices.
 - Achievements and milestones to reward progress.
-
-A significant component of this game is the interactions of systems, time of day, effects temperature, temperature effects powerline efficiency (using electrical formula, but simplified for gameplay); thus, many formulas for systems will include terms from many others. For now, many systems will randomly fluctuate, but eventually, there can be more thoughtful term-driven reasons for fluctuations.
-
-We've also introduced **Society's Well-being**, which is a modifer for maximum power demand, also temperture can be a term in maximum power demand.
 
 All of these variables will be in the top section, the idea being it being a mega dashboard of variables that are moving around and when you start the game you can't really do a lot to modify them, but as you progress, open more tabs, get more upgrades, you can start changing the nature of the very world around you.
