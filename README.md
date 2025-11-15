@@ -71,3 +71,9 @@ This game is an ongoing project. Future updates may include:
 - More complex upgrade paths and research trees.
 - A more dynamic market for power prices.
 - Achievements and milestones to reward progress.
+
+A significant component of this game is the interactions of systems, time of day, effects temperature, temperature effects powerline efficiency (using electrical formula, but simplified for gameplay); thus, many formulas for systems will include terms from many others. For now, many systems will randomly fluctuate, but eventually, there can be more thoughtful term-driven reasons for fluctuations.
+
+We've also introduced **Society's Well-being**, which is a modifer for maximum power demand, also temperture can be a term in maximum power demand.
+
+All of these variables will be in the top section, the idea being it being a mega dashboard of variables that are moving around and when you start the game you can't really do a lot to modify them, but as you progress, open more tabs, get more upgrades, you can start changing the nature of the very world around you.
