@@ -21,6 +21,8 @@ var powerline_eff = 0.7;
 var households = 4;
 var power_demand = 0;
 var base_household_demand = 0.5; // in kW
+var temperature = 15.0;
+var society_well_being = 0.8;
 
 var p_mech_prototype_cost = 0
 var p_mech_upgrade_chance = 0.1
@@ -634,14 +636,45 @@ function gameLoop(){
     var minute = time % 60;
     document.getElementById("time").innerHTML = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
 
-    // Calculate powerline efficiency based on number of households
-    powerline_eff = Math.pow(0.99, households);
-    document.getElementById("powerline_eff").innerHTML = (powerline_eff * 100).toFixed(2);
+    // --- New Simulation Logic ---
 
-    // Calculate total power demand
-    power_demand = households * base_household_demand * powerline_eff * 1000; // in W
+    // 1. Temperature Simulation
+    var temp_amplitude = 10; // Fluctuation range
+    var temp_base = 15; // Base temperature in Celsius
+    var temp_offset = temp_amplitude * Math.cos(((time - (12 * 60)) / (24 * 60)) * 2 * Math.PI);
+    var temp_random_fluctuation = (Math.random() * 2) - 1; // +/- 1 degree
+    temperature = fixFloat(temp_base + temp_offset + temp_random_fluctuation);
+
+    // 2. Society Well-being Simulation
+    var ideal_temp = 22;
+    var temp_diff = Math.abs(temperature - ideal_temp);
+    var well_being_penalty = Math.max(0, temp_diff - 5) * 0.02; // Penalty for temps far from ideal
+    society_well_being = Math.max(0, 0.8 - well_being_penalty + (Math.random() * 0.1 - 0.05)); // Base 70-90%
+    society_well_being = Math.min(1, society_well_being); // Clamp to 100%
+
+    // 3. Update Transformer Efficiency (random fluctuation)
+    transformer_eff = 0.7 + (Math.random() * 0.05 - 0.025); // Fluctuate around 70%
+
+    // 4. Update Powerline Efficiency (impacted by temperature)
+    var temp_penalty = Math.max(0, temperature - 20) * 0.005; // Efficiency drops above 20C
+    powerline_eff = Math.pow(0.99, households) - temp_penalty;
+    powerline_eff = Math.max(0.1, powerline_eff); // Ensure it doesn't go below 10%
+
+    // 5. Update Power Demand (impacted by time, temperature, and well-being)
+    var demand_amplitude = base_household_demand * 0.5; // 50% fluctuation
+    var demand_offset = demand_amplitude * Math.cos(((time - (18 * 60)) / (24 * 60)) * 2 * Math.PI); // Peak in the evening
+    var temp_demand_bonus = Math.max(0, temp_diff - 10) * 0.1; // Higher demand for extreme temps
+    power_demand = households * (base_household_demand + demand_offset + temp_demand_bonus) * (0.5 + society_well_being * 0.5) * 1000; // in W
+
+    // --- Update UI ---
+    document.getElementById("temperature").innerHTML = temperature;
+    document.getElementById("well_being").innerHTML = (society_well_being * 100).toFixed(0);
+    document.getElementById("transformer_eff").innerHTML = (transformer_eff * 100).toFixed(2);
+    document.getElementById("powerline_eff").innerHTML = (powerline_eff * 100).toFixed(2);
     document.getElementById("power_demand").innerHTML = formatSI(power_demand);
 
+
+    // --- Original Price Logic ---
     // Day-night cycle using a cosine wave
     var base_price = 3;
     var amplitude = 2;
