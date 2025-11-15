@@ -4,20 +4,39 @@
 
 This is an incremental idle game where you take on the role of a power magnate. Your goal is to build a power empire from the ground up, starting with simple pedal-powered machines and growing to manage a massive network of advanced power sources.
 
-## Gameplay
+## How to Play
 
 The core of the game revolves around generating power, selling it for credits, and reinvesting those credits to expand your operations. You'll hire workers, purchase new and more efficient power generators, and research upgrades to boost your output.
 
 As you progress, you can hire managers to automate tasks, allowing you to focus on strategy and long-term growth. The game continues to run in the background, so you can return to see the fruits of your automated labor.
 
-## How to Play
+### Factory Floor
 
-- **Factory Floor:** This is where you start. You can hire workers and purchase power generators like Pedal Machines, Solar Panels, and Wind Turbines.
-- **Laboratory:** Here, you can invest in research to upgrade your equipment, increasing its power output.
-- **Engineers:** Hire engineers to gradually increase the success chance of your upgrades.
-- **Management:** Once you've accumulated enough wealth, you can hire managers to automate the purchasing of workers and equipment. You can also unlock special abilities, like negotiating power prices for a temporary income boost.
-- **Dashboard:** Keep an eye on your progress with graphs that track your credit and power generation history.
-- **Admin:** For those who want to speed things up, there's a cheat button to add extra credits.
+This is where you start. You can hire workers and purchase power generators like:
+
+- **Pedal Machines**: The most basic power source, requiring workers to operate.
+- **Solar Panels**: A more advanced option that generates power passively.
+- **Wind Turbines**: Even more powerful, but also more expensive.
+
+### Laboratory
+
+Here, you can invest in research to upgrade your equipment, increasing its power output. Upgrades have a chance to fail, but you can increase the odds of success by hiring engineers.
+
+### Management
+
+Once you've accumulated enough wealth, you can hire managers to automate the purchasing of workers and equipment. You can also unlock special abilities, like negotiating power prices for a temporary income boost.
+
+### Engineers
+
+Hiring engineers will passively increase the success chance of your upgrades over time, making them a crucial investment for long-term growth.
+
+### Dashboard
+
+Keep an eye on your progress with graphs that track your credit and power generation history, giving you a visual representation of your empire's growth.
+
+### Admin
+
+For those who want to speed things up, the Admin panel offers a couple of cheat buttons to add extra credits, as well as a slider to control the game speed.
 
 ## File Structure
 
