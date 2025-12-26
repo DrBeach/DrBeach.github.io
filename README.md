@@ -91,7 +91,7 @@ The cost of purchasing new assets (generators, workers, managers) increases with
     Cost = BaseCost * (GrowthFactor ^ Count) + (Count * (TierFactor ^ Tier))
     ```
 -   **Description:** The cost follows an exponential curve based on the `GrowthFactor`. Additionally, a "Tiered Growth" component adds a significant cost increase when certain milestones (10, 25, 50, 100 units) are reached.
--   **Worker Cost:** Workers have a flat purchase cost and currently do not have an upkeep cost.
+-   **Worker Cost:** Workers have no initial hiring cost, but incur a recurring upkeep cost per game tick.
 -   **Manager Cost:** The purchase price for a Manager increases by 50% with each unit bought.
 
 ### World Simulation
@@ -138,10 +138,10 @@ This roadmap outlines planned features in a granular, task-oriented format. Each
 
 -   **Description:** Implement a recurring cost for hired workers to create a more dynamic economic challenge.
 -   **Tasks:**
-    -   [ ] Add a `worker_upkeep_cost` global variable (e.g., set to 0.1 credits per tick).
-    -   [ ] In the `getCredits` function, subtract `workers * worker_upkeep_cost` from `current_credits` each tick.
-    -   [ ] Rename `work_cost` to `worker_hire_cost` for clarity.
-    -   [ ] Update the UI to display the total upkeep cost per tick.
+    -   [x] Add a `worker_upkeep_cost` global variable (e.g., set to 0.1 credits per tick).
+    -   [x] In the `getCredits` function, subtract `workers * worker_upkeep_cost` from `current_credits` each tick.
+    -   [x] Rename `work_cost` to `worker_upkeep_cost` for clarity.
+    -   [x] Update the UI to display the total upkeep cost per tick.
 
 #### ECO-02: Salaried Managers
 
