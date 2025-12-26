@@ -8,8 +8,8 @@ var current_power_price = 2;
 var current_credits = 500;
 var time = 0;
 var current_per_hour = 0;
-var work_cost = 0.1;
-var work_cost_per_hour = 0;
+var worker_upkeep_cost = 0.1;
+var total_worker_upkeep = 0;
 var workers = 0;
 var p_mechs = 0;
 var p_mech_eff = 0.5;
@@ -149,7 +149,7 @@ function load() {
 function getCredits() {
     var transmitted_power = current_gen * transformer_eff;
     var sold_power = Math.min(transmitted_power, power_demand);
-    current_per_hour = (current_power_price * price_multiplier * sold_power) - work_cost_per_hour;
+    current_per_hour = (current_power_price * price_multiplier * sold_power) - total_worker_upkeep;
     current_per_hour = fixFloat(current_per_hour);
     current_credits = current_credits + current_per_hour;
     current_credits = fixFloat(current_credits);
@@ -308,6 +308,13 @@ function getCurrentGen() {
 }
 
 /**
+ * Calculates the total upkeep cost for all workers.
+ */
+function updateUpkeepCosts() {
+    total_worker_upkeep = fixFloat(workers * worker_upkeep_cost);
+}
+
+/**
  * Buys a new worker.
  * @param {number} number - The number of workers to buy.
  */
@@ -315,9 +322,6 @@ function buyWorker(number) {
     workers = workers + number;
     getCurrentGen()
     updateFormulas();
-    var work_cost_temp = work_cost * workers;
-    work_cost_temp = fixFloat(work_cost_temp)
-    work_cost_per_hour = work_cost_temp
 };
 
 /**
@@ -645,7 +649,7 @@ function updateUI() {
     document.getElementById("current_power_price").innerHTML = fixFloat(current_power_price * price_multiplier);
     document.getElementById("current_credits").innerHTML = current_credits;
     document.getElementById("current_per_hour").innerHTML = current_per_hour;
-    document.getElementById("work_cost").innerHTML = work_cost_per_hour;
+    document.getElementById("total_worker_upkeep").innerHTML = total_worker_upkeep;
     document.getElementById("workers").innerHTML = workers;
     document.getElementById("p_mechs").innerHTML = p_mechs;
     document.getElementById("p_mech_eff").innerHTML = p_mech_eff;
@@ -827,6 +831,7 @@ function gameLoop() {
     updateWorldStats();
     updatePowerPrice();
     updateUpgradeProbabilities();
+    updateUpkeepCosts();
     getCredits()
     runManagerAI();
     updateCooldowns();
